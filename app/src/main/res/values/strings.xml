@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">FirstApp</string>
+    <string name="inclass01">In Class  Assignment 01</string>
+    <string name="bmi_title">Body Mass Index (BMI)</string>
+    <string name="weight_text">Weight</string>
+    <string name="weight_input_text">Your weight in pounds</string>
+    <string name="lb_text">lb</string>
+    <string name="height_title">Height</string>
+    <string name="feet_text">feet</string>
+    <string name="inches_text">inches</string>
+    <string name="button_calculate">Calculate BMI</string>
+    <string name="bmi_text">Click on Calculate BMI to find your BMI</string>
 </resources>

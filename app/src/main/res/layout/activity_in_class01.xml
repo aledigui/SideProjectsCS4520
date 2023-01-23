@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".inClass01Activity">
+
+    <TextView
+        android:id="@+id/bmi_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/bmi_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/weight_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/weight_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bmi_title" />
+
+    <TextView
+        android:id="@+id/lb_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lb_text"
+        app:layout_constraintBottom_toBottomOf="@+id/weight_input"
+        app:layout_constraintStart_toStartOf="@+id/inches_text"
+        app:layout_constraintTop_toTopOf="@+id/weight_input" />
+
+    <TextView
+        android:id="@+id/height_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:text="@string/height_title"
+        app:layout_constraintStart_toStartOf="@+id/weight_text"
+        app:layout_constraintTop_toBottomOf="@+id/weight_input" />
+
+    <TextView
+        android:id="@+id/feet_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/feet_text"
+        app:layout_constraintBottom_toBottomOf="@+id/feet_input"
+        app:layout_constraintStart_toStartOf="@+id/inches_text"
+        app:layout_constraintTop_toTopOf="@+id/feet_input" />
+
+    <TextView
+        android:id="@+id/inches_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="@string/inches_text"
+        app:layout_constraintBottom_toBottomOf="@+id/inches_input"
+        app:layout_constraintStart_toEndOf="@+id/inches_input"
+        app:layout_constraintTop_toBottomOf="@+id/feet_input" />
+
+    <Button
+        android:id="@+id/button_calculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/button_calculate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inches_input" />
+
+    <EditText
+        android:id="@+id/weight_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:ems="10"
+        android:hint="@string/weight_input_text"
+        android:inputType="textEmailAddress"
+        app:layout_constraintStart_toStartOf="@+id/weight_text"
+        app:layout_constraintTop_toBottomOf="@+id/weight_text" />
+
+    <EditText
+        android:id="@+id/feet_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/feet_text"
+        android:inputType="textEmailAddress"
+        app:layout_constraintStart_toStartOf="@+id/height_title"
+        app:layout_constraintTop_toBottomOf="@+id/height_title" />
+
+    <EditText
+        android:id="@+id/inches_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/inches_text"
+        android:inputType="textEmailAddress"
+        app:layout_constraintStart_toStartOf="@+id/feet_input"
+        app:layout_constraintTop_toBottomOf="@+id/feet_input" />
+
+    <TextView
+        android:id="@+id/bmi_results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bmi_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_calculate" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
