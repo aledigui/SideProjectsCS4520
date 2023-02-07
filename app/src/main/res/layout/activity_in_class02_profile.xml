@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".inClass02_profile">
+
+    <ImageView
+        android:id="@+id/avatar_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/select_avatar" />
+
+    <TextView
+        android:id="@+id/name_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/name_bold"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avatar_profile" />
+
+    <TextView
+        android:id="@+id/email_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/email_bold"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/name_profile"
+        app:layout_constraintTop_toBottomOf="@+id/name_profile" />
+
+    <TextView
+        android:id="@+id/ios_android_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/i_use_text"
+        app:layout_constraintStart_toStartOf="@+id/email_profile"
+        app:layout_constraintTop_toBottomOf="@+id/email_profile" />
+
+    <TextView
+        android:id="@+id/mood_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/Mood_text"
+        app:layout_constraintStart_toStartOf="@+id/ios_android_text"
+        app:layout_constraintTop_toBottomOf="@+id/ios_android_text" />
+
+    <ImageView
+        android:id="@+id/mood_img_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mood_text"
+        app:srcCompat="@drawable/happy" />
+
+    <TextView
+        android:id="@+id/intentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/name_profile"
+        app:layout_constraintStart_toEndOf="@+id/name_profile"
+        app:layout_constraintTop_toTopOf="@+id/name_profile" />
+
+    <TextView
+        android:id="@+id/intentEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/email_profile"
+        app:layout_constraintStart_toStartOf="@+id/intentName"
+        app:layout_constraintTop_toTopOf="@+id/email_profile" />
+
+    <TextView
+        android:id="@+id/softwareIntent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/ios_android_text"
+        app:layout_constraintStart_toEndOf="@+id/ios_android_text"
+        app:layout_constraintTop_toTopOf="@+id/ios_android_text" />
+
+    <TextView
+        android:id="@+id/moodIntent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/mood_text"
+        app:layout_constraintStart_toEndOf="@+id/mood_text"
+        app:layout_constraintTop_toTopOf="@+id/mood_text" />
+</androidx.constraintlayout.widget.ConstraintLayout>
