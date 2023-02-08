@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DisplayFragment">
+
+    <ImageView
+        android:id="@+id/finalFragmentAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:src="@drawable/select_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/moodFinalImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:src="@drawable/happy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iamTextFragment" />
+
+    <TextView
+        android:id="@+id/displayNameTextFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/name_bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/finalFragmentAvatar" />
+
+    <TextView
+        android:id="@+id/nameFragmentFinal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/displayNameTextFragment"
+        app:layout_constraintStart_toEndOf="@+id/displayNameTextFragment"
+        app:layout_constraintTop_toTopOf="@+id/displayNameTextFragment" />
+
+    <TextView
+        android:id="@+id/emailDisplayFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/email_bold"
+        app:layout_constraintStart_toStartOf="@+id/displayNameTextFragment"
+        app:layout_constraintTop_toBottomOf="@+id/displayNameTextFragment" />
+
+    <TextView
+        android:id="@+id/emailFragmentFinal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/emailDisplayFragment"
+        app:layout_constraintStart_toEndOf="@+id/displayNameTextFragment"
+        app:layout_constraintTop_toTopOf="@+id/emailDisplayFragment" />
+
+    <TextView
+        android:id="@+id/iuseDisplayFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/i_use_text"
+        app:layout_constraintStart_toStartOf="@+id/emailDisplayFragment"
+        app:layout_constraintTop_toBottomOf="@+id/emailDisplayFragment" />
+
+    <TextView
+        android:id="@+id/finalRadioButtonChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/iuseDisplayFragment"
+        app:layout_constraintStart_toEndOf="@+id/iuseDisplayFragment"
+        app:layout_constraintTop_toTopOf="@+id/iuseDisplayFragment" />
+
+    <TextView
+        android:id="@+id/iamTextFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/Mood_text"
+        app:layout_constraintStart_toStartOf="@+id/iuseDisplayFragment"
+        app:layout_constraintTop_toBottomOf="@+id/iuseDisplayFragment" />
+
+    <TextView
+        android:id="@+id/moodFinalFragmentText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/iamTextFragment"
+        app:layout_constraintStart_toEndOf="@+id/iamTextFragment"
+        app:layout_constraintTop_toTopOf="@+id/iamTextFragment" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,4 +27,7 @@
     <string name="empty_string">" "</string>
     <string name="happy_text">Happy</string>
     <string name="angry_text">Angry</string>
+    <string name="inclass03_button">IN CLASS ASSIGNMENT 03</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
