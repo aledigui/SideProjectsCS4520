@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.regex.Pattern;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link EditProfileFragment#newInstance} factory method to
@@ -47,6 +49,8 @@ public class EditProfileFragment extends Fragment {
     private View mainView;
 
     private Boolean avatarFlag = false;
+
+    private String radioChoice = "null";
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -80,8 +84,6 @@ public class EditProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // TODO: DO THIS!
-            
         }
     }
 
@@ -102,14 +104,50 @@ public class EditProfileFragment extends Fragment {
         moodFragmentImage = mainView.findViewById(R.id.moodFragmentImage);
         submitFragmentButton = mainView.findViewById(R.id.submitFragmentButton);
 
-        // TODO: logic for sending the correct data to main activity so that the main activtiy
-        // can send it to the third and last fragment
-
         // example:
         if (avatarFlag) {
             updateData.sendAvatarImage(avatarImageFragment.getId());
+        } else {
+            Toast.makeText(getActivity(),
+                    "Please select an avatar image",
+                    Toast.LENGTH_LONG).show();
         }
+        if (!radioChoice.equals("null")) {
+            updateData.sendMoodText(radioChoice);
+        } else {
 
+        }
+        if (nameInputFragment.getText() != null) {
+            char[] tempChar = nameInputFragment.getText().toString().toCharArray();
+            if (tempChar.length == 0) {
+                Toast.makeText(getActivity(),
+                        "Invalid name - only characters allowed",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                for(char c : tempChar) {
+                    if (!Character.isLetter(c) && c != ' ') {
+                        Toast.makeText(getActivity(),
+                                "Invalid name - only characters allowed",
+                                Toast.LENGTH_LONG).show();
+                        // return mainView;
+                        break;
+                    }
+                }
+            }
+        } else {
+            updateData.sendNameText(nameInputFragment.getText().toString());
+        }
+        String emailFormat = "^[A-Za-z]*@[A-Za-z]+(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(emailFormat);
+        if (emailInputFragment != null) {
+            if (!pattern.matcher(emailInputFragment.getText().toString()).matches()) {
+                Toast.makeText(getActivity(),
+                        "Invalid email",
+                        Toast.LENGTH_LONG).show();
+            }
+        } else {
+            updateData.sendEmailText(emailInputFragment.getText().toString());
+        }
         return mainView;
     }
 
@@ -125,8 +163,8 @@ public class EditProfileFragment extends Fragment {
     }
 
     // getter for the avatar image id
-    public int getAvatarImg() {
-        return avatarImageFragment.getId();
+    public ImageView getAvatarImg() {
+        return avatarImageFragment;
     }
 
     // setter for the avatar image id
@@ -152,6 +190,7 @@ public class EditProfileFragment extends Fragment {
 
     // setter for the mood text
     public void setMoodText(String moodText) {
+        radioChoice = moodText;
         moodFragmentTextVary.setText(moodText);
     }
 

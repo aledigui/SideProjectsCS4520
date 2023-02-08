@@ -3,6 +3,7 @@ package com.example.firstapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 
 public class InClass03Activity extends AppCompatActivity implements EditProfileFragment.IFragmentUpdate, SelectAvatarFragment.ISelectAvatarFragmentUpdate  {
 
@@ -17,15 +18,18 @@ public class InClass03Activity extends AppCompatActivity implements EditProfileF
                 .addToBackStack("editProfile")
                 .commit();
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.containerFragment, new SelectAvatarFragment(), "selectAvatarFragment")
-                .addToBackStack("selectAvatar")
-                .commit();
+        EditProfileFragment editProfileFragment = (EditProfileFragment) getSupportFragmentManager()
+                .findFragmentByTag("editProfile");
+        editProfileFragment.getAvatarImg().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.containerFragment, new EditProfileFragment(), "selectAvatarFragment")
+                        .addToBackStack("selectAvatar")
+                        .commit();
+            }
+        });
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.containerFragment, new DisplayFragment(), "displayFragment")
-                .addToBackStack("display")
-                .commit();
     }
 
     @Override
