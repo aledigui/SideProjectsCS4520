@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".inClass02_avatar">
+    tools:context=".inClass02.inClass02_avatar">
 
     <TextView
         android:id="@+id/selectAvatar_text"

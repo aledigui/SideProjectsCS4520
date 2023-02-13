@@ -1,7 +1,9 @@
-package com.example.firstapp;
+package com.example.firstapp.inClass03;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -9,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.firstapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,14 +74,17 @@ public class DisplayFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             // TODO: DO THIS!
+
         }
     }
+    IDisplayFragment updateData;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         displayView = inflater.inflate(R.layout.fragment_display, container, false);
+        getActivity().setTitle("Display Activity");
 
         avatarImg = displayView.findViewById(R.id.finalFragmentAvatar);
         moodImg = displayView.findViewById(R.id.moodFinalImg);
@@ -85,6 +92,12 @@ public class DisplayFragment extends Fragment {
         nameText = displayView.findViewById(R.id.nameFragmentFinal);
         emailText = displayView.findViewById(R.id.emailFragmentFinal);
         radioGroupText = displayView.findViewById(R.id.finalRadioButtonChoice);
+
+        updateData.updateAvatarImg();
+        updateData.updateNameText();
+        updateData.updateEmailText();
+        updateData.updateRadioChoice();
+        updateData.updateMood();
 
         return displayView;
     }
@@ -118,6 +131,21 @@ public class DisplayFragment extends Fragment {
     public void setMoodText(String moodSent) {
         moodText.setText(moodSent);
     }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof DisplayFragment.IDisplayFragment) {
+            updateData = (DisplayFragment.IDisplayFragment) context;
+        } else {
+            throw new RuntimeException(context.toString() + "must implement IFragmentUpdate");
+        }
+    }
 
-
+    public interface IDisplayFragment {
+        void updateAvatarImg();
+        void updateNameText();
+        void updateEmailText();
+        void updateRadioChoice();
+        void updateMood();
+    }
 }

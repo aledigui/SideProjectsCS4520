@@ -1,9 +1,7 @@
-package com.example.firstapp;
+package com.example.firstapp.inClass02;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 

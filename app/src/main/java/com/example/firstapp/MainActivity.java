@@ -7,6 +7,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.view.View;
 
+import com.example.firstapp.inClass01.inClass01Activity;
+import com.example.firstapp.inClass02.inClass02Activity;
+import com.example.firstapp.inClass03.InClass03Activity;
+import com.example.firstapp.a_practiceActivity.PracticeActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button buttonPractice;

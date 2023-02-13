@@ -2,10 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/FragmentConstraint"
+    android:id="@+id/editDisplayContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditProfileFragment">
+    android:background="#337536"
+    tools:context=".inClass03.EditProfileFragment">
+
+    <Button
+        android:id="@+id/submitFragmentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/moodSeekbar" />
 
     <EditText
         android:id="@+id/nameInputFragment"
@@ -42,59 +53,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailInputFragment" />
 
-    <RadioButton
-        android:id="@+id/androidFragmentRd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/android_rd"
-        app:layout_constraintStart_toEndOf="@+id/IuseTextView"
-        app:layout_constraintTop_toBottomOf="@+id/IuseTextView" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="5dp"
-        tools:layout_editor_absoluteY="3dp">
-
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/IuseTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/i_use_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatarImageFragment" />
-
-    <RadioButton
-        android:id="@+id/iosFragmentRd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ios_rd"
-        app:layout_constraintStart_toStartOf="@+id/androidFragmentRd"
-        app:layout_constraintTop_toBottomOf="@+id/androidFragmentRd" />
-
-    <TextView
-        android:id="@+id/currentMoodFragmenttext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/currentMood"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iosFragmentRd" />
-
-    <TextView
-        android:id="@+id/moodFragmentTextVary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/angry_text"
-        app:layout_constraintBottom_toBottomOf="@+id/currentMoodFragmenttext"
-        app:layout_constraintStart_toEndOf="@+id/currentMoodFragmenttext"
-        app:layout_constraintTop_toTopOf="@+id/currentMoodFragmenttext" />
+    <ImageView
+        android:id="@+id/moodFragmentImage"
+        android:layout_width="43dp"
+        android:layout_height="39dp"
+        android:src="@drawable/angry"
+        app:layout_constraintBottom_toBottomOf="@+id/moodSeekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/moodSeekbar"
+        app:layout_constraintTop_toTopOf="@+id/moodSeekbar" />
 
     <SeekBar
         android:id="@+id/moodSeekbar"
@@ -107,23 +74,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currentMoodFragmenttext" />
 
-    <ImageView
-        android:id="@+id/moodFragmentImage"
-        android:layout_width="43dp"
-        android:layout_height="39dp"
-        android:src="@drawable/angry"
-        app:layout_constraintBottom_toBottomOf="@+id/moodSeekbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/moodSeekbar"
-        app:layout_constraintTop_toTopOf="@+id/moodSeekbar" />
-
-    <Button
-        android:id="@+id/submitFragmentButton"
+    <TextView
+        android:id="@+id/IuseTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="@string/submit"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/i_use_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moodSeekbar" />
+        app:layout_constraintTop_toBottomOf="@+id/avatarImageFragment" />
+
+    <TextView
+        android:id="@+id/currentMoodFragmenttext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/currentMood"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choiceRadioGroup" />
+
+    <TextView
+        android:id="@+id/moodFragmentTextVary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/angry_text"
+        app:layout_constraintBottom_toBottomOf="@+id/currentMoodFragmenttext"
+        app:layout_constraintStart_toEndOf="@+id/currentMoodFragmenttext"
+        app:layout_constraintTop_toTopOf="@+id/currentMoodFragmenttext" />
+
+    <RadioGroup
+        android:id="@+id/choiceRadioGroup"
+        android:layout_width="96dp"
+        android:layout_height="114dp"
+        app:layout_constraintStart_toEndOf="@+id/IuseTextView"
+        app:layout_constraintTop_toBottomOf="@+id/IuseTextView">
+
+        <RadioButton
+            android:id="@+id/androidFragmentRd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/android_rd" />
+
+        <RadioButton
+            android:id="@+id/iosFragmentRd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ios_rd" />
+    </RadioGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

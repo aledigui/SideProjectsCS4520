@@ -5,7 +5,7 @@
     android:id="@+id/button"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PracticeActivity">
+    tools:context=".a_practiceActivity.PracticeActivity">
 
     <Button
         android:id="@+id/button_log"

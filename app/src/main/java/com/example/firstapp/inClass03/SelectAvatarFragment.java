@@ -1,4 +1,4 @@
-package com.example.firstapp;
+package com.example.firstapp.inClass03;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.example.firstapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +27,6 @@ public class SelectAvatarFragment extends Fragment {
     private static final String ARG_AVATAR5 = "avatar_r2";
     private static final String ARG_AVATAR6 = "avatar_r3";
 
-    // TODO: Rename and change types of parameters
     private ImageView imageAvatar_l1fragment;
     private ImageView imageAvatar_l2fragment;
     private ImageView imageAvatar_l3fragment;
@@ -71,7 +72,7 @@ public class SelectAvatarFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // TODO: DO THIS!
+
         }
     }
 
@@ -80,6 +81,8 @@ public class SelectAvatarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         avatarView = inflater.inflate(R.layout.fragment_select_avatar, container, false);
+        getActivity().setTitle("Select Avatar");
+
 
         // finding the imageViews
         imageAvatar_l1fragment = avatarView.findViewById(R.id.imageAvatar_l1fragment);
@@ -92,37 +95,38 @@ public class SelectAvatarFragment extends Fragment {
         imageAvatar_l1fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateData.sendSelectAvatarImage(imageAvatar_l1fragment.getId());
+                updateData.sendSelectAvatarImage(R.drawable.avatar_f_1);
             }
         });
         imageAvatar_l2fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateData.sendSelectAvatarImage(imageAvatar_l2fragment.getId());
+                updateData.sendSelectAvatarImage(R.drawable.avatar_f_2);
+
             }
         });
-        imageAvatar_l1fragment.setOnClickListener(new View.OnClickListener() {
+        imageAvatar_l3fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateData.sendSelectAvatarImage(imageAvatar_l3fragment.getId());
+                updateData.sendSelectAvatarImage(R.drawable.avatar_f_3);
             }
         });
         imageAvatar_r1fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateData.sendSelectAvatarImage(imageAvatar_r1fragment.getId());
+                updateData.sendSelectAvatarImage(R.drawable.avatar_m_3);
             }
         });
         imageAvatar_r2fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateData.sendSelectAvatarImage(imageAvatar_r2fragment.getId());
+                updateData.sendSelectAvatarImage(R.drawable.avatar_m_2);
             }
         });
         imageAvatar_r3fragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateData.sendSelectAvatarImage(imageAvatar_r3fragment.getId());
+                updateData.sendSelectAvatarImage(R.drawable.avatar_m_1);
             }
         });
 

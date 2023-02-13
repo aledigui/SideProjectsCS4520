@@ -1,4 +1,4 @@
-package com.example.firstapp;
+package com.example.firstapp.inClass01;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.example.firstapp.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;

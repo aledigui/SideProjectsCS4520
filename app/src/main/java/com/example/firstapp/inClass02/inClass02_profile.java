@@ -1,10 +1,12 @@
-package com.example.firstapp;
+package com.example.firstapp.inClass02;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.firstapp.R;
 
 public class inClass02_profile extends AppCompatActivity {
     private ImageView avatar_profile;
