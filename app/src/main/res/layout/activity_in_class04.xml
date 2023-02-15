@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".inClass04.InClass04Activity">
+
+    <TextView
+        android:id="@+id/selectComplexityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/complexityText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/timesText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/timesText"
+        app:layout_constraintBottom_toBottomOf="@+id/complexityInt"
+        app:layout_constraintStart_toEndOf="@+id/complexityInt"
+        app:layout_constraintTop_toTopOf="@+id/complexityInt" />
+
+    <TextView
+        android:id="@+id/complexityInt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:text="@string/zero"
+        app:layout_constraintBottom_toBottomOf="@+id/selectComplexityText"
+        app:layout_constraintStart_toEndOf="@+id/selectComplexityText"
+        app:layout_constraintTop_toTopOf="@+id/selectComplexityText" />
+
+    <SeekBar
+        android:id="@+id/complexSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
+        android:progress="0"
+        android:max="10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectComplexityText" />
+
+    <TextView
+        android:id="@+id/minimumText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:text="@string/minimumString"
+        app:layout_constraintStart_toStartOf="@+id/complexSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/complexSeekBar" />
+
+    <TextView
+        android:id="@+id/maxText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/maxString"
+        app:layout_constraintStart_toStartOf="@+id/minimumText"
+        app:layout_constraintTop_toBottomOf="@+id/minimumText" />
+
+    <TextView
+        android:id="@+id/avgText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/avgString"
+        app:layout_constraintStart_toStartOf="@+id/maxText"
+        app:layout_constraintTop_toBottomOf="@+id/maxText" />
+
+    <Button
+        android:id="@+id/generateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/generateButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avgText" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/generateButton" />
+
+    <TextView
+        android:id="@+id/minimumInt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/minimumText"
+        app:layout_constraintStart_toEndOf="@+id/minimumText"
+        app:layout_constraintTop_toTopOf="@+id/minimumText" />
+
+    <TextView
+        android:id="@+id/maximumInt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/maxText"
+        app:layout_constraintStart_toStartOf="@+id/minimumInt"
+        app:layout_constraintTop_toTopOf="@+id/maxText" />
+
+    <TextView
+        android:id="@+id/avgInt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_string"
+        app:layout_constraintBottom_toBottomOf="@+id/avgText"
+        app:layout_constraintStart_toStartOf="@+id/maximumInt"
+        app:layout_constraintTop_toTopOf="@+id/avgText" />
+</androidx.constraintlayout.widget.ConstraintLayout>

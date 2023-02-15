@@ -30,4 +30,13 @@
     <string name="inclass03_button">IN CLASS ASSIGNMENT 03</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="inClass04">IN CLASS ASSIGNMENT 04</string>
+    <string name="complexityText">Select Complexity:</string>
+    <string name="timesText">times</string>
+    <string name="minimumString">Minimum:</string>
+    <string name="maxString">Maximum:</string>
+    <string name="avgString">Average:</string>
+    <string name="generateButton">Generate Number</string>
+    <string name="one">1</string>
+    <string name="zero">0</string>
 </resources>
