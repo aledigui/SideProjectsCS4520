@@ -39,4 +39,7 @@
     <string name="generateButton">Generate Number</string>
     <string name="one">1</string>
     <string name="zero">0</string>
+    <string name="button5">IN CLASS ASSIGNMENT 05</string>
+    <string name="keyWord">Search Keyword</string>
+    <string name="go">Go</string>
 </resources>

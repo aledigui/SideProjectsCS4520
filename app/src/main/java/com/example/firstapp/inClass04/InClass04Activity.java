@@ -62,7 +62,7 @@ public class InClass04Activity extends AppCompatActivity {
         timesText = findViewById(R.id.timesText);
 
         threadPool = Executors.newFixedThreadPool(1);
-        
+
         complexSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
