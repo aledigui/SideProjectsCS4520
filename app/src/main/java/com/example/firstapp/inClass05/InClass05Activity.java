@@ -28,10 +28,17 @@ import com.example.firstapp.R;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class InClass05Activity extends AppCompatActivity {
 
@@ -55,6 +62,28 @@ public class InClass05Activity extends AppCompatActivity {
     private int imageCounter = 0;
 
     private ProgressBar loadingBar;
+
+    private boolean arrowsAllowed = false;
+
+    private boolean isInternetAvailable() {
+        InetAddress inetAddress = null;
+        try {
+            Future<InetAddress> future = Executors.newSingleThreadExecutor().submit(new Callable<InetAddress>() {
+                @Override
+                public InetAddress call() {
+                    try {
+                        return InetAddress.getByName("google.com");
+                    } catch (UnknownHostException e) {
+                        return null;
+                    }
+                }
+            });
+            inetAddress = future.get(1000, TimeUnit.MILLISECONDS);
+            future.cancel(true);
+        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+        }
+        return inetAddress != null && !inetAddress.equals("");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,134 +109,142 @@ public class InClass05Activity extends AppCompatActivity {
                         "images/keywords\n")
                 .build();
 
-        // call to get the keywords
-        client.newCall(keywordRequest).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    runOnUiThread(new Runnable() {
-                        ResponseBody responseBody = response.body();
-                        String keywords = responseBody.string();
-                        @Override
-                        public void run() {
-                            // gettting the different keywords
-                            splitKeywords = keywords.split(",");
-                        }
-                    });
-
+        if (isInternetAvailable()) {
+            // call to get the keywords
+            client.newCall(keywordRequest).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    e.printStackTrace();
                 }
-            }
-        });
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        runOnUiThread(new Runnable() {
+                            ResponseBody responseBody = response.body();
+                            String keywords = responseBody.string();
+
+                            @Override
+                            public void run() {
+                                // gettting the different keywords
+                                splitKeywords = keywords.split(",");
+                            }
+                        });
+
+                    }
+                }
+            });
+        }
+        
+
 
         buttonGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String keyword = imgInputText.getText().toString();
+                if (isInternetAvailable()) {
+                    String keyword = imgInputText.getText().toString();
 
-                // check if the keyword is correct
-                for (String s : splitKeywords) {
-                    if (!s.equals(keyword)) {
-                        keywordFlag = false;
+                    // check if the keyword is correct
+                    for (String s : splitKeywords) {
+                        if (!s.equals(keyword)) {
+                            keywordFlag = false;
+                        }
+                        if (s.equals(keyword)) {
+                            keywordFlag = true;
+                            break;
+                        }
                     }
-                    if (s.equals(keyword)) {
-                        keywordFlag = true;
-                        break;
-                    }
-                }
 
-                if (!keywordFlag) {
+                    if (!keywordFlag) {
+                        Toast.makeText(InClass05Activity.this, "Invalid keyword!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    // url for the images with keyword passed in from main activity
+                    HttpUrl imageUrl = HttpUrl.parse("http://ec2-54-164-201-39.compute-1.amazonaws.com/apis/\n"
+                            + "images/retrieve\n")
+                            .newBuilder().addQueryParameter("keyword", keyword)
+                            .build();
+
+
+                    // request for the images urls
+                    Request imgRequest = new Request.Builder().url(imageUrl).build();
+
+                    // call request to get the images linked to the keyword
+                    client.newCall(imgRequest).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                ResponseBody responseBody = response.body();
+                                String keywordImg = responseBody.string();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+
+                                        if (keywordImg.equals("")) {
+                                            Toast.makeText(InClass05Activity.this, "No Images Found.", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            // splitting the image string
+                                            imageDownload = keywordImg.split("\n");
+                                            arrowsAllowed = true;
+                                            // loading logic
+                                            loadingBar.setVisibility(View.VISIBLE);
+                                            loadingText.setText("loading...");
+                                            // downloading the img and setting it to the imageResult
+                                            Picasso.get().load(imageDownload[0]).into(imageResult);
+                                            loadingBar.setVisibility(View.INVISIBLE);
+                                            loadingText.setText("");
+                                        }
+
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                } else {
                     Toast.makeText(InClass05Activity.this,
-                            "Invalid keyword!",
+                            "No internet connection.",
                             Toast.LENGTH_LONG).show();
                     return;
                 }
-
-                // url for the images with keyword passed in from main activity
-                HttpUrl imageUrl = HttpUrl.parse("http://ec2-54-164-201-39.compute-1.amazonaws.com/apis/\n" +
-                                "images/retrieve\n").newBuilder()
-                        .addQueryParameter("keyword", keyword)
-                        .build();
-
-
-
-                // request for the images urls
-                Request imgRequest = new Request.Builder()
-                        .url(imageUrl)
-                        .build();
-                // call request to get the images linked to the keyword
-                client.newCall(imgRequest).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        if(response.isSuccessful()) {
-                            ResponseBody responseBody = response.body();
-                            String keywordImg = responseBody.string();
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // splitting the image string
-                                    imageDownload = keywordImg.split("\n");
-                                    // loading logic
-                                    loadingBar.setVisibility(View.VISIBLE);
-                                    loadingText.setText("loading...");
-                                    // downloading the img and setting it to the imageResult
-                                    Picasso.get().load(imageDownload[0]).into(imageResult);
-                                    loadingBar.setVisibility(View.INVISIBLE);
-                                    loadingText.setText("");
-                                }
-                            });
-                        }
-
-                    }
-                });
             }
         });
-
-        // setting the clickables to false if the array is less than or equal to 1
-        if (imageDownload != null) {
-            if (imageDownload.length <= 1) {
-                nextImg.setClickable(false);
-                previousImg.setClickable(false);
-            }
-        }
 
         nextImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // user is one the last image and clicks next needs to go back to first
-                if (imageCounter == (imageDownload.length - 1)) {
-                    // next image is the first
-                    imageCounter = 0;
-                    // loading logic
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingText.setText("loading...");
-                    // downloading the img and setting it to the imageResult
-                    Picasso.get().load(imageDownload[imageCounter]).into(imageResult);
-                    // stop loading
-                    loadingBar.setVisibility(View.INVISIBLE);
-                    loadingText.setText("");
-                } else {
-                    // next image
-                    imageCounter += 1;
-                    // loading logic
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingText.setText("loading...");
-                    // downloading the img and setting it to the imageResult
-                    Picasso.get().load(imageDownload[imageCounter]).into(imageResult);
-                    // stop loading
-                    loadingBar.setVisibility(View.INVISIBLE);
-                    loadingText.setText("");
+                if (arrowsAllowed) {
+                    // user is one the last image and clicks next needs to go back to first
+                    if (imageCounter == (imageDownload.length - 1)) {
+                        // next image is the first
+                        imageCounter = 0;
+                        // loading logic
+                        loadingBar.setVisibility(View.VISIBLE);
+                        loadingText.setText("loading next...");
+                        // downloading the img and setting it to the imageResult
+                        Picasso.get().load(imageDownload[imageCounter]).into(imageResult);
+                        // stop loading
+                        loadingBar.setVisibility(View.INVISIBLE);
+                        loadingText.setText("");
+                    } else {
+                        // next image
+                        imageCounter += 1;
+                        // loading logic
+                        loadingBar.setVisibility(View.VISIBLE);
+                        loadingText.setText("loading next...");
+                        // downloading the img and setting it to the imageResult
+                        Picasso.get().load(imageDownload[imageCounter]).into(imageResult);
+                        // stop loading
+                        loadingBar.setVisibility(View.INVISIBLE);
+                        loadingText.setText("");
+                    }
                 }
             }
         });
@@ -215,32 +252,34 @@ public class InClass05Activity extends AppCompatActivity {
         previousImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // user is one the last image and clicks next needs to go back to first
-                if (imageCounter == 0) {
-                    // next image is the last
-                    imageCounter = (imageDownload.length - 1);
-                    // loading logic
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingText.setText("loading...");
-                    // downloading the img and setting it to the imageResult
-                    Picasso.get().load(imageDownload[imageCounter]).into(imageResult);
-                    // stop loading
-                    loadingBar.setVisibility(View.INVISIBLE);
-                    loadingText.setText("");
-                } else {
-                    // next image
-                    imageCounter -= 1;
-                    // loading logic
-                    loadingBar.setVisibility(View.VISIBLE);
-                    loadingText.setText("loading...");
-                    // downloading the img and setting it to the imageResult
-                    Picasso.get().load(imageDownload[imageCounter]).into(imageResult);
-                    // stop loading
-                    loadingBar.setVisibility(View.INVISIBLE);
-                    loadingText.setText("");
+                if (arrowsAllowed) {
+                    // user is one the last image and clicks next needs to go back to first
+                    if (imageCounter == 0) {
+                        // next image is the last
+                        imageCounter = (imageDownload.length - 1);
+                        // loading logic
+                        loadingBar.setVisibility(View.VISIBLE);
+                        loadingText.setText("loading previous...");
+                        // downloading the img and setting it to the imageResult
+                        Picasso.get().load(imageDownload[imageCounter]).into(imageResult);
+                        // stop loading
+                        loadingBar.setVisibility(View.INVISIBLE);
+                        loadingText.setText("");
+                    } else {
+                        // next image
+                        imageCounter -= 1;
+                        // loading logic
+                        loadingBar.setVisibility(View.VISIBLE);
+                        loadingText.setText("loading previous...");
+                        // downloading the img and setting it to the imageResult
+                        Picasso.get().load(imageDownload[imageCounter]).into(imageResult);
+                        // stop loading
+                        loadingBar.setVisibility(View.INVISIBLE);
+                        loadingText.setText("");
+                    }
                 }
             }
         });
+
     }
 }
