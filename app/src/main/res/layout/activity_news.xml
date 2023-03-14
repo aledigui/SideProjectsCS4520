@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".inClass06.NewsActivity"
+    android:scrollbars="vertical">
+
+
+    <TextView
+        android:id="@+id/titleNews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/newsTitle"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/authorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/author"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleNews" />
+
+    <TextView
+        android:id="@+id/authorSelected"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/empty_string"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/titleSelected"
+        app:layout_constraintTop_toBottomOf="@+id/authorText" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/title"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/authorText"
+        app:layout_constraintTop_toBottomOf="@+id/authorSelected" />
+
+
+    <TextView
+        android:id="@+id/titleSelected"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/empty_string"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/descriptionSelected"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+    <TextView
+        android:id="@+id/descriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/description"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/titleText"
+        app:layout_constraintTop_toBottomOf="@+id/titleSelected" />
+
+
+    <TextView
+        android:id="@+id/descriptionSelected"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:scrollbars="vertical"
+        android:text="@string/empty_string"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/urlSelected"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+
+    <TextView
+        android:id="@+id/urlText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/url"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/descriptionText"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionSelected" />
+
+    <TextView
+        android:id="@+id/urlSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hyperlink"
+        app:layout_constraintStart_toEndOf="@+id/urlText"
+        app:layout_constraintTop_toBottomOf="@+id/urlText" />
+
+    <TextView
+        android:id="@+id/publishedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/published"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/urlText"
+        app:layout_constraintTop_toBottomOf="@+id/urlSelected" />
+
+    <TextView
+        android:id="@+id/publishedSelected"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/empty_string"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/urlSelected"
+        app:layout_constraintTop_toBottomOf="@+id/publishedText" />
+
+    <TextView
+        android:id="@+id/contentText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/content"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/publishedText"
+        app:layout_constraintTop_toBottomOf="@+id/publishedSelected" />
+
+    <TextView
+        android:id="@+id/contentSelected"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/empty_string"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/urlSelected"
+        app:layout_constraintTop_toBottomOf="@+id/contentText" />
+
+    <ImageView
+        android:id="@+id/imageUrlSelected"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@android:drawable/ic_menu_mapmode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.412"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contentSelected"
+        app:layout_constraintVertical_bias="0.411" />
+</androidx.constraintlayout.widget.ConstraintLayout>

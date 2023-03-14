@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/choose"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".inClass06.InClass06Activity">
+
+    <TextView
+        android:id="@+id/chooseCountryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/country"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/chooseCategoryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/Category"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/chooseCountryText"
+        app:layout_constraintStart_toEndOf="@+id/spinnerCountry"
+        app:layout_constraintTop_toTopOf="@+id/chooseCountryText" />
+
+    <Spinner
+        android:id="@+id/spinnerCountry"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toBottomOf="@+id/chooseCountryText"
+        app:layout_constraintStart_toEndOf="@+id/chooseCountryText"
+        app:layout_constraintTop_toTopOf="@+id/chooseCountryText" />
+
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toBottomOf="@+id/chooseCategoryText"
+        app:layout_constraintStart_toEndOf="@+id/chooseCategoryText"
+        app:layout_constraintTop_toTopOf="@+id/chooseCategoryText" />
+
+    <ListView
+        android:id="@+id/listViewNews"
+        android:layout_width="405dp"
+        android:layout_height="614dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchButton" />
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chooseCategoryText" />
+
+    <TextView
+        android:id="@+id/selectText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selectcc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

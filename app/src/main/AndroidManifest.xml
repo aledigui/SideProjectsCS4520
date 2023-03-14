@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +12,12 @@
         android:theme="@style/Theme.FirstApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".inClass06.NewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".inClass06.InClass06Activity"
+            android:exported="false" />
         <activity
             android:name=".inClass05.InClass05Activity"
             android:exported="false" />
@@ -46,5 +52,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

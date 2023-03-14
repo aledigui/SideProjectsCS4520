@@ -42,4 +42,37 @@
     <string name="button5">IN CLASS ASSIGNMENT 05</string>
     <string name="keyWord">Search Keyword</string>
     <string name="go">Go</string>
+    <string name="INCLASS06bUTTON">IN CLASS ASSIGNMENT 06</string>
+    <string name="chooseCountry">Choose country:</string>
+    <string name="Category">Category:</string>
+    <string name="country">Country:</string>
+    <string name="search">Search</string>
+    <string name="selectcc">Select a country and a category</string>
+    <string name="newsTitle">Your news</string>
+    <string name="Source">"Source: "</string>
+    <string name="author">"Author: "</string>
+    <string name="title">"Title: "</string>
+    <string name="description">"Description: "</string>
+    <string name="url">"Url: "</string>
+    <string name="published">"Published: "</string>
+    <string name="content">"Content: "</string>
+    <string-array name="countries">
+        <item></item>
+        <item>us</item>
+        <item>sa</item>
+        <item>ve</item>
+        <item>au</item>
+        <item>kr</item>
+    </string-array>
+    <string-array name="categories">
+        <item></item>
+        <item>business</item>
+        <item>entertainment</item>
+        <item>general</item>
+        <item>health</item>
+        <item>science</item>
+        <item>sports</item>
+        <item>technology</item>
+    </string-array>
+    <string name="hyperlink"><a href="https://www.google.com">Go to the news!</a></string>
 </resources>
