@@ -121,13 +121,18 @@ public class InClass06Activity extends AppCompatActivity {
             public void onClick(View view) {
                 // client
                 OkHttpClient client = new OkHttpClient();
-
+                String newsUrl = "";
                 // request
-                if (category.equals("") || country.equals("")) {
+                if (category.equals("") && country.equals("")) {
                     Toast.makeText(InClass06Activity.this, "Invalid category/country selection!", Toast.LENGTH_LONG).show();
                     return;
+                } else if(category.equals("") && !country.equals("")) {
+                    newsUrl = "https://newsapi.org/v2/top-headlines?country=" + country + "&apiKey=" + apiKey;
+                } else if (!category.equals("") && country.equals("")) {
+                    newsUrl = "https://newsapi.org/v2/top-headlines?category=" + category + "&apiKey=" + apiKey;
+                } else if (!category.equals("") && !country.equals("")) {
+                    newsUrl = "https://newsapi.org/v2/top-headlines?country=" + country + "&category=" + category + "&apiKey=" + apiKey;
                 }
-                String newsUrl = "https://newsapi.org/v2/top-headlines?country=" + country + "&category=" + category+ "&apiKey=" + apiKey;
                 Request newsRequest = new Request.Builder()
                         .url(newsUrl)
                         .build();
