@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".inClass08.MainChatFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/logOutMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/logout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/chatsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/chats"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/send"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/typeMessageText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:ems="10"
+            android:hint="@string/typemessage"
+            android:inputType="textEmailAddress"
+            app:layout_constraintBottom_toBottomOf="@+id/sendButton"
+            app:layout_constraintEnd_toStartOf="@+id/sendButton"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/chattingWithText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/chattingWith"
+            app:layout_constraintBottom_toBottomOf="@+id/logOutMain"
+            app:layout_constraintStart_toEndOf="@+id/logOutMain"
+            app:layout_constraintTop_toTopOf="@+id/logOutMain" />
+
+        <TextView
+            android:id="@+id/loggedInAsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/loggedInAs"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/typeMessageText" />
+
+        <TextView
+            android:id="@+id/myUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_string"
+            android:textColor="#31E439"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/loggedInAsText"
+            app:layout_constraintStart_toEndOf="@+id/loggedInAsText"
+            app:layout_constraintTop_toTopOf="@+id/loggedInAsText" />
+
+        <TextView
+            android:id="@+id/otherUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/empty_string"
+            android:textColor="#C81EE4"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/chattingWithText"
+            app:layout_constraintStart_toEndOf="@+id/chattingWithText"
+            app:layout_constraintTop_toTopOf="@+id/chattingWithText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatMessageRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/typeMessageText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logOutMain" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

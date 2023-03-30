@@ -56,6 +56,34 @@
     <string name="url">"Url: "</string>
     <string name="published">"Published: "</string>
     <string name="content">"Content: "</string>
+    <string name="hyperlink"><a href="https://www.google.com">Go to the news!</a></string>
+    <string name="login">Login</string>
+    <string name="signup">Sign up</string>
+    <string name="password">Password</string>
+    <string name="passwordText">Password</string>
+    <string name="contrasena">contrasena</string>
+    <string name="nametext">Name (only for sign up)</string>
+    <string name="note">Note:</string>
+    <string name="delete">Delete</string>
+    <string name="inclass08">IN CLASS ASSIGNMENT 08</string>
+    <string name="password08">Password:</string>
+    <string name="signup08">Don\'t have an account yet?</string>
+    <string name="firstname">First name:</string>
+    <string name="lastname">Last name:</string>
+    <string name="username">Username:</string>
+    <string name="confirmpassword">Confirm password:</string>
+    <string name="firstNameHint">First Name</string>
+    <string name="lastnameSignup">Last name</string>
+    <string name="usernameSignup">Username</string>
+    <string name="confirmapasswordHint">Confirm password</string>
+    <string name="newCreds">Log in with your new credentials!</string>
+    <string name="logout">Log out</string>
+    <string name="chats">Chats</string>
+    <string name="send">Send</string>
+    <string name="typemessage">Type your message here</string>
+    <string name="chattingWith">Chatting with:</string>
+    <string name="loggedInAs">"You are logged in as "</string>
+    <string name="chat">Chat</string>
     <string-array name="countries">
         <item></item>
         <item>us</item>
@@ -74,5 +102,4 @@
         <item>sports</item>
         <item>technology</item>
     </string-array>
-    <string name="hyperlink"><a href="https://www.google.com">Go to the news!</a></string>
 </resources>
