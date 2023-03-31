@@ -13,8 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.firstapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -23,7 +31,8 @@ import java.util.ArrayList;
  * Use the {@link ChatListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChatListFragment extends Fragment  implements ChatAdapter.IChatAdapterUpdate{
+public class ChatListFragment extends Fragment{
+    private final String collectionDb = "registeredUsers";
     private RecyclerView recyclerViewChats;
     private ChatAdapter chatAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -31,6 +40,11 @@ public class ChatListFragment extends Fragment  implements ChatAdapter.IChatAdap
     private View chatView;
 
     private Button chatsButton;
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
+    private FirebaseFirestore db;
 
 
     public ChatListFragment() {
@@ -57,37 +71,42 @@ public class ChatListFragment extends Fragment  implements ChatAdapter.IChatAdap
                              Bundle savedInstanceState) {
 
         chats = new ArrayList<>();
-
-        // TODO: get this list from firebase!
-        chats.add(new Chat("alejandro@diez.com", "Alejandro", "diez", "aledigui"));
-        chats.add(new Chat("gonz@fer.com", "Fernanda", "Gonzalez", "carapapa"));
-        chats.add(new Chat("alejandro@diez.com", "Alejandro", "diez", "aledigui"));
-        chats.add(new Chat("gonz@fer.com", "Fernanda", "Gonzalez", "carapapa"));
-        chats.add(new Chat("alejandro@diez.com", "Alejandro", "diez", "aledigui"));
-        chats.add(new Chat("gonz@fer.com", "Fernanda", "Gonzalez", "carapapa"));
-        chats.add(new Chat("alejandro@diez.com", "Alejandro", "diez", "aledigui"));
-        chats.add(new Chat("gonz@fer.com", "Fernanda", "Gonzalez", "carapapa"));
-        chats.add(new Chat("alejandro@diez.com", "Alejandro", "diez", "aledigui"));
-        chats.add(new Chat("gonz@fer.com", "Fernanda", "Gonzalez", "carapapa"));
-        chats.add(new Chat("alejandro@diez.com", "Alejandro", "diez", "aledigui"));
-        chats.add(new Chat("gonz@fer.com", "Fernanda", "Gonzalez", "carapapa"));
-        chats.add(new Chat("alejandro@diez.com", "Alejandro", "diez", "aledigui"));
-        chats.add(new Chat("gonz@fer.com", "Fernanda", "Gonzalez", "carapapa"));
-        chats.add(new Chat("alejandro@diez.com", "Alejandro", "diez", "aledigui"));
-        chats.add(new Chat("gonz@fer.com", "Fernanda", "Gonzalez", "carapapa"));
-
-
-
+        // TODO: set the chats in the database
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
         chatView = inflater.inflate(R.layout.fragment_chat_list, container, false);
         getActivity().setTitle("Available chats");
-
-
 
         recyclerViewChats = chatView.findViewById(R.id.chatRecyclerView);
         recyclerViewLayoutManager = new LinearLayoutManager(this.getContext());
         recyclerViewChats.setLayoutManager(recyclerViewLayoutManager);
-        chatAdapter = new ChatAdapter(chats, this.getContext());
-        recyclerViewChats.setAdapter(chatAdapter);
+        Context context = this.getContext();
+
+        // get the registered users
+        db.collection(collectionDb)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                Chat registeredUsersChat = new Chat(document.getData().get("email").toString(), document.getData().get("username").toString());
+                                if (!mUser.getDisplayName().equals(document.getData().get("username").toString())) {
+                                    chats.add(registeredUsersChat);
+                                }
+                                chatAdapter = new ChatAdapter(chats, context);
+                                recyclerViewChats.setAdapter(chatAdapter);
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Unable to retrieve chats. Try again later", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+
+
 
         // Inflate the layout for this fragment
         return chatView;
@@ -96,7 +115,7 @@ public class ChatListFragment extends Fragment  implements ChatAdapter.IChatAdap
     @Override
     public void onResume() {
         super.onResume();
-        // TODO: handle the changes that may have occured: new user -> new chat!
+
     }
 
     @Override
@@ -109,12 +128,8 @@ public class ChatListFragment extends Fragment  implements ChatAdapter.IChatAdap
         }
     }
 
-    @Override
-    public void onChatAdapterPressed() {
-        iChatMessage.onChatPressed();
-    }
 
     public interface IChatMessage {
-        void onChatPressed();
+        void onChatPressed(String otherUsername);
     }
 }

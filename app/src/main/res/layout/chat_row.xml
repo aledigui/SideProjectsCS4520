@@ -10,89 +10,50 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
         android:text="@string/chat"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/lastNameChatText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/lastname"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/firstNameChatText"
-        app:layout_constraintTop_toBottomOf="@+id/firstNameChatText" />
 
     <TextView
         android:id="@+id/usernameChatText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/username"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/lastNameChatText"
-        app:layout_constraintTop_toBottomOf="@+id/lastNameChatText" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/emailChatText"
+        app:layout_constraintTop_toBottomOf="@+id/emailChatText" />
 
     <TextView
         android:id="@+id/emailChatText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/email_bold"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/usernameChatText"
-        app:layout_constraintTop_toBottomOf="@+id/usernameChatText" />
-
-    <TextView
-        android:id="@+id/firstNameChatText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
-        android:text="@string/firstname"
+        android:text="@string/email_bold"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/firstNameChat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/empty_string"
-        app:layout_constraintBottom_toBottomOf="@+id/firstNameChatText"
-        app:layout_constraintStart_toEndOf="@+id/firstNameChatText"
-        app:layout_constraintTop_toTopOf="@+id/firstNameChatText" />
-
-    <TextView
-        android:id="@+id/lastNameChat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/empty_string"
-        app:layout_constraintBottom_toBottomOf="@+id/lastNameChatText"
-        app:layout_constraintStart_toEndOf="@+id/firstNameChatText"
-        app:layout_constraintStart_toStartOf="@+id/firstNameChat"
-        app:layout_constraintTop_toTopOf="@+id/lastNameChatText" />
-
-    <TextView
         android:id="@+id/usernameChat"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/empty_string"
         app:layout_constraintBottom_toBottomOf="@+id/usernameChatText"
-        app:layout_constraintStart_toEndOf="@+id/lastNameChatText"
-        app:layout_constraintStart_toStartOf="@+id/lastNameChat"
+        app:layout_constraintStart_toStartOf="@+id/emailChat"
         app:layout_constraintTop_toTopOf="@+id/usernameChatText" />
 
     <TextView
         android:id="@+id/emailChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
         android:text="@string/empty_string"
         app:layout_constraintBottom_toBottomOf="@+id/emailChatText"
-        app:layout_constraintStart_toEndOf="@+id/usernameChatText"
-        app:layout_constraintStart_toStartOf="@+id/usernameChat"
+        app:layout_constraintStart_toEndOf="@+id/emailChatText"
         app:layout_constraintTop_toTopOf="@+id/emailChatText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

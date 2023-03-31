@@ -20,28 +20,19 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private ArrayList<Chat> chats;
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView firstNameChat, lastNameChat, usernameChat, emailChat;
+        private final TextView usernameChat, emailChat;
+
         private Button chatButton;
 
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            firstNameChat = itemView.findViewById(R.id.firstNameChat);
-            lastNameChat = itemView.findViewById(R.id.lastNameChat);
             usernameChat = itemView.findViewById(R.id.usernameChat);
             emailChat = itemView.findViewById(R.id.emailChat);
             chatButton = itemView.findViewById(R.id.chatButton);
-        }
-
-        public TextView getFirstNameChat() {
-            return firstNameChat;
-        }
-
-        public TextView getLastNameChat() {
-            return lastNameChat;
         }
 
         public TextView getUsernameChat() {
@@ -55,6 +46,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         public Button getChatButton() {
             return this.chatButton;
         }
+    }
+
+    public TextView getUsername() {
+        return this.getUsername();
     }
 
     public ChatAdapter(ArrayList<Chat> chats, Context context) {
@@ -75,15 +70,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getFirstNameChat().setText(chats.get(position).getChatFirstName());
-        holder.getLastNameChat().setText(chats.get(position).getChatLastName());
         holder.getUsernameChat().setText(chats.get(position).getChatUsername());
         holder.getEmailChat().setText(chats.get(position).getChatEmail());
-
+        String username = chats.get(position).getChatUsername();
         holder.getChatButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chatUpdate.onChatPressed();
+                chatUpdate.onChatPressed(username);
             }
         });
 
@@ -94,8 +87,4 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         return chats.size();
     }
 
-
-    public interface IChatAdapterUpdate {
-        void onChatAdapterPressed();
-    }
 }

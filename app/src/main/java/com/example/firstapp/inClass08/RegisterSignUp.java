@@ -20,8 +20,15 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -29,7 +36,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RegisterSignUp extends AppCompatActivity {
-
     // textviews
     private TextView emailLogin;
     private TextView passwordLogin;
@@ -41,7 +47,7 @@ public class RegisterSignUp extends AppCompatActivity {
     private TextView emailSignUp;
     private TextView passwordSignup;
     private TextView reTypePasswordSignup;
-    
+
     private TextView newCredentialsText;
 
     // editText
@@ -63,12 +69,26 @@ public class RegisterSignUp extends AppCompatActivity {
 
     // firebase
     private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_sign_up);
 
+        // FIREBASE
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        db.setFirestoreSettings(settings);
+
+        // elements
         emailLogin = findViewById(R.id.emailLogin);
         passwordLogin = findViewById(R.id.passwordLogin);
         signupText = findViewById(R.id.signupText);
@@ -116,7 +136,6 @@ public class RegisterSignUp extends AppCompatActivity {
         }
 
 
-
         signupclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,6 +176,10 @@ public class RegisterSignUp extends AppCompatActivity {
                     Toast.makeText(RegisterSignUp.this, "Invalid username", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if (usernameTextSignUp.getText().toString().length() > 10) {
+                    Toast.makeText(RegisterSignUp.this, "Usernames cannot be longer than 10 characters", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (emailTextSignup.getText() == null || emailTextSignup.getText().toString().equals("")
                         || !Patterns.EMAIL_ADDRESS.matcher(emailTextSignup.getText().toString()).matches()) {
                     Toast.makeText(RegisterSignUp.this, "Invalid email", Toast.LENGTH_LONG).show();
@@ -166,53 +189,95 @@ public class RegisterSignUp extends AppCompatActivity {
                     Toast.makeText(RegisterSignUp.this, "Invalid password", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if (passwordTextSignUp.getText().toString().length() < 6) {
+                    Toast.makeText(RegisterSignUp.this, "Password needs to be at least 6 characters long", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (confirmPasswordTextSignUp.getText() == null || confirmPasswordTextSignUp.getText().toString().equals("")
                         || !(passwordTextSignUp.getText().toString().equals(confirmPasswordTextSignUp.getText().toString()))) {
                     Toast.makeText(RegisterSignUp.this, "Passwords do not match", Toast.LENGTH_LONG).show();
                     return;
                 }
-                // TODO: check for already used emails and usernames (you have alreaedy checked for the rest so only 404 replies will suffice)
-                if (true) {
-                    signinup = false;
-                    // visible
-                    signupText.setVisibility(View.VISIBLE);
-                    signupclick.setVisibility(View.VISIBLE);
-                    // invisble
-                    firstNameSignUp.setVisibility(View.INVISIBLE);
-                    lastnameSignup.setVisibility(View.INVISIBLE);
-                    usernameSignup.setVisibility(View.INVISIBLE);
-                    emailSignUp.setVisibility(View.INVISIBLE);
-                    passwordSignup.setVisibility(View.INVISIBLE);
-                    reTypePasswordSignup.setVisibility(View.INVISIBLE);
-                    firstNameTextSignUp.setVisibility(View.INVISIBLE);
-                    lastNameTextSignUp.setVisibility(View.INVISIBLE);
-                    usernameTextSignUp.setVisibility(View.INVISIBLE);
-                    emailTextSignup.setVisibility(View.INVISIBLE);
-                    passwordTextSignUp.setVisibility(View.INVISIBLE);
-                    confirmPasswordTextSignUp.setVisibility(View.INVISIBLE);
-                    signUpButton08.setVisibility(View.INVISIBLE);
+                // if the if statements pass this will be goo to run
+                String email = emailTextSignup.getText().toString();
+                String password = passwordTextSignUp.getText().toString();
+                String username = usernameTextSignUp.getText().toString();
+                // signup with firebase:
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    mUser = task.getResult().getUser();
+                                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(username)
+                                            .build();
+                                    mUser.updateProfile(profileChangeRequest)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                        // TODO: add the user to the database
+                                                        Map<String, String> newRegisteredUser = new HashMap<>();
+                                                        newRegisteredUser.put("username", username);
+                                                        newRegisteredUser.put("email", email);
+                                                        db.collection("registeredUsers")
+                                                                .add(newRegisteredUser)
+                                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                    @Override
+                                                                    public void onSuccess(DocumentReference documentReference) {
+                                                                        Toast.makeText(RegisterSignUp.this, "You have successfully registered " + username, Toast.LENGTH_LONG).show();
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        // do nothing since it is handled below
+                                                                    }
+                                                                });
+                                                    }
+                                                }
+                                            });
 
-                    // set the credentials back to empty just in case the user wants to signup other users
-                    firstNameTextSignUp.setText("");;
-                    lastNameTextSignUp.setText("");
-                    usernameTextSignUp.setText("");
-                    emailTextSignup.setText("");
-                    passwordTextSignUp.setText("");
-                    confirmPasswordTextSignUp.setText("");
+                                    signupText.setVisibility(View.VISIBLE);
+                                    signupclick.setVisibility(View.VISIBLE);
+                                    // invisble
+                                    firstNameSignUp.setVisibility(View.INVISIBLE);
+                                    lastnameSignup.setVisibility(View.INVISIBLE);
+                                    usernameSignup.setVisibility(View.INVISIBLE);
+                                    emailSignUp.setVisibility(View.INVISIBLE);
+                                    passwordSignup.setVisibility(View.INVISIBLE);
+                                    reTypePasswordSignup.setVisibility(View.INVISIBLE);
+                                    firstNameTextSignUp.setVisibility(View.INVISIBLE);
+                                    lastNameTextSignUp.setVisibility(View.INVISIBLE);
+                                    usernameTextSignUp.setVisibility(View.INVISIBLE);
+                                    emailTextSignup.setVisibility(View.INVISIBLE);
+                                    passwordTextSignUp.setVisibility(View.INVISIBLE);
+                                    confirmPasswordTextSignUp.setVisibility(View.INVISIBLE);
+                                    signUpButton08.setVisibility(View.INVISIBLE);
+
+                                    // set the credentials back to empty just in case the user wants to signup other users
+                                    firstNameTextSignUp.setText("");
+
+                                    lastNameTextSignUp.setText("");
+                                    usernameTextSignUp.setText("");
+                                    emailTextSignup.setText("");
+                                    passwordTextSignUp.setText("");
+                                    confirmPasswordTextSignUp.setText("");
 
 
-                    // new credentials text
-                    newCredentialsText.setVisibility(View.VISIBLE);
+                                    // new credentials text
+                                    newCredentialsText.setVisibility(View.VISIBLE);
 
-                    // no need to hide the signup and dont have an account yet text
-                    // since there is still an option to sign up more users
-                    
+                                    // no need to hide the signup and dont have an account yet text
+                                    // since there is still an option to sign up more users
+                                } else {
+                                    Toast.makeText(RegisterSignUp.this, "User with same credentials already exists.", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                            }
+                        });
 
-                    //
-                } else {
-                    Toast.makeText(RegisterSignUp.this, "Email/Username already in use", Toast.LENGTH_LONG).show();
-                    return;
-                }
             }
         });
 
@@ -229,18 +294,38 @@ public class RegisterSignUp extends AppCompatActivity {
                     Toast.makeText(RegisterSignUp.this, "Invalid password", Toast.LENGTH_LONG).show();
                     return;
                 }
-                // TODO: If the credentials are okay
-                // Going to the main activity: InClass08Activity where chatting will be handled
-                Intent toInClass08Activity = new Intent(RegisterSignUp.this, InClass08Activity.class);
-                startActivity(toInClass08Activity);
+                String userEmail = emailTextLogIn.getText().toString();
+                String password = passwordTextLogin.getText().toString();
+                // if the if statements pass then try to log in:
+                mAuth.signInWithEmailAndPassword(userEmail,password)
+                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+
+                                Toast.makeText(RegisterSignUp.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                System.out.println(""+e.getMessage());
+                                Toast.makeText(RegisterSignUp.this, "Login Failed!", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(task.isSuccessful()){
+                                    // Going to the main activity: InClass08Activity where chatting will be handled
+                                    Intent toInClass08Activity = new Intent(RegisterSignUp.this, InClass08Activity.class);
+                                    startActivity(toInClass08Activity);
+                                }
+                            }
+                        });
+
             }
         });
 
 
-
-
-
-
-        
     }
 }

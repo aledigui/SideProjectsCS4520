@@ -7,10 +7,8 @@ public class Chat {
     private String chatLastName;
     private String chatUsername;
 
-    public Chat(String chatEmail, String chatFirstName, String chatLastName, String chatUsername) {
+    public Chat(String chatEmail, String chatUsername) {
         this.chatEmail = chatEmail;
-        this.chatFirstName = chatFirstName;
-        this.chatLastName = chatLastName;
         this.chatUsername = chatUsername;
     }
     
@@ -20,22 +18,6 @@ public class Chat {
     
     public void setChatEmail(String newEmail) {
         this.chatEmail = newEmail;
-    }
-
-    public String getChatFirstName() {
-        return this.chatFirstName;
-    }
-
-    public void setChatFirstName(String newFirstName) {
-        this.chatFirstName = newFirstName;
-    }
-
-    public String getChatLastName() {
-        return this.chatLastName;
-    }
-
-    public void setChatLastName(String newLastName) {
-        this.chatLastName = newLastName;
     }
 
     public String getChatUsername() {
