@@ -33,8 +33,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,7 +53,7 @@ public class MainChatFragment extends Fragment {
     private ChatMessageAdapter chatMessageAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
-    private ArrayList<ChatMessage> chatMessages;
+    private ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
     private Button logOutMain;
     private Button chatsButton;
 
@@ -78,6 +81,8 @@ public class MainChatFragment extends Fragment {
     private String chatsId;
 
     private String userCollection = "users";
+
+    private Boolean newConvo = false;
 
     public MainChatFragment() {
         // Required empty public constructor
@@ -128,8 +133,6 @@ public class MainChatFragment extends Fragment {
         loggedInAsText = chatView.findViewById(R.id.loggedInAsText);
         chatMessageRecyclerView = chatView.findViewById(R.id.chatMessageRecyclerView);
 
-        chatMessages = new ArrayList<>();
-
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -144,7 +147,6 @@ public class MainChatFragment extends Fragment {
                 // if chatsId is not null then it means that the user is chatting with someone
                 // Thus, there is something to save if the user tries to chat with another user
                 if (chatsId != null) {
-                    // TODO: save the chats to the userbase
                     Map<String, ArrayList<ChatMessage>> chatsCollection = new HashMap<>();
                     chatsCollection.put("chats", chatMessages);
                     db.collection("chatsUsers").document(chatsId)
@@ -173,7 +175,6 @@ public class MainChatFragment extends Fragment {
                 // if chatsId is not null then it means that the user is chatting with someone
                 // Thus, there is something to save if the user tries to chat with another user
                 if (chatsId != null) {
-                    // TODO: save the chats to the userbase
                     Map<String, ArrayList<ChatMessage>> chatsCollection = new HashMap<>();
                     chatsCollection.put("chats", chatMessages);
                     db.collection("chatsUsers").document(chatsId)
@@ -188,7 +189,8 @@ public class MainChatFragment extends Fragment {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), "Unable to save chats with " + otherUsername.getText().toString(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "Unable to save chats with " + otherUsername.getText().toString(),
+                                            Toast.LENGTH_LONG).show();
                                 }
                             });
 
@@ -204,10 +206,10 @@ public class MainChatFragment extends Fragment {
                     Toast.makeText(getContext(), "Select a user you would like to chat with!", Toast.LENGTH_LONG).show();
                     return;
                 } else {
-                    //System.out.println();
                     if (typeMessageText.getText().toString().equals("") || typeMessageText.getText() == null) {
                         Toast.makeText(getContext(), "Message empty! Try writing something", Toast.LENGTH_LONG).show();
                     } else {
+
 
                         ChatMessage newChatMessage = new ChatMessage(myUsername.getText().toString(), typeMessageText.getText().toString());
                         chatMessages.add(newChatMessage);
@@ -282,25 +284,46 @@ public class MainChatFragment extends Fragment {
         if (other != null) {
             otherUsername.setText(other);
         }
+        boolean sorted = false;
         if (otherUsername.getText() != null && !otherUsername.getText().toString().equals(" ")) {
             // The id will be always in alphabetical order
             String username = this.getMyUsername();
             String otherUsername = this.getOtherUsername();
-            // if username is further up lexicographically
-            if (username.compareTo(otherUsername) < 0) {
-                chatsId = username + otherUsername;
-            } else if (username.compareTo(otherUsername) > 0) {
-                chatsId = otherUsername + username;
-            } else {
-                if (username.equals(otherUsername)) {
+
+            String[] splitUsername = otherUsername.split("\\s+");
+            List<String> arrayUsername = new ArrayList<String>(Arrays.asList(splitUsername));
+            if (!arrayUsername.contains(username)) {
+                arrayUsername.add(username.trim());
+            }
+            splitUsername = arrayUsername.toArray(new String[arrayUsername.size()]);
+
+            Arrays.sort(splitUsername);
+            if (splitUsername.length > 1) {
+                String newOtherUsername = "";
+                for (String s: splitUsername) {
+                    newOtherUsername += s.trim();
+                }
+                sorted = true;
+                chatsId = newOtherUsername;
+
+            }
+            if (!sorted) {
+                // if username is further up lexicographically
+                if (username.compareTo(otherUsername) < 0) {
                     chatsId = username + otherUsername;
-                } else if (username.length() > otherUsername.length()) {
+                } else if (username.compareTo(otherUsername) > 0) {
                     chatsId = otherUsername + username;
-                } else if (username.length() < otherUsername.length()) {
-                    chatsId = username + otherUsername;
+                } else {
+                    if (username.equals(otherUsername)) {
+                        chatsId = username + otherUsername;
+                    } else if (username.length() > otherUsername.length()) {
+                        chatsId = otherUsername + username;
+                    } else if (username.length() < otherUsername.length()) {
+                        chatsId = username + otherUsername;
+                    }
                 }
             }
-            // TODO: set the chats using the chatsID to retrieve them from the database
+
             DocumentReference docRef = db.collection("chatsUsers").document(chatsId);
             Context fragContext = getContext();
             recyclerViewLayoutManager = new LinearLayoutManager(fragContext);
@@ -323,14 +346,13 @@ public class MainChatFragment extends Fragment {
                             chatMessageAdapter = new ChatMessageAdapter(chatMessages, fragContext);
                             chatMessageRecyclerView.setAdapter(chatMessageAdapter);
                         } else {
+                            chatMessages = new ArrayList<ChatMessage>();
+                            chatMessageAdapter = new ChatMessageAdapter(chatMessages, fragContext);
+                            chatMessageRecyclerView.setAdapter(chatMessageAdapter);
                         }
-                    } else {
                     }
                 }
             });
-            if (chatMessages.size() != 0) {
-                Toast.makeText(getContext(), "Unable to retrieve chats. Try again later" + chatMessages.get(0).getMessage().toString(), Toast.LENGTH_LONG).show();
-            }
         }
 
     }
@@ -351,6 +373,10 @@ public class MainChatFragment extends Fragment {
         void onChatsPressed();
 
         void onSendPressed();
+
+        Boolean colorCardViewSwitcher(String username);
+
+
 
     }
 }

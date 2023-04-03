@@ -301,8 +301,9 @@ public class RegisterSignUp extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-
-                                Toast.makeText(RegisterSignUp.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                                // Going to the main activity: InClass08Activity where chatting will be handled
+                                Intent toInClass08Activity = new Intent(RegisterSignUp.this, InClass08Activity.class);
+                                startActivity(toInClass08Activity);
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -316,9 +317,7 @@ public class RegisterSignUp extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
-                                    // Going to the main activity: InClass08Activity where chatting will be handled
-                                    Intent toInClass08Activity = new Intent(RegisterSignUp.this, InClass08Activity.class);
-                                    startActivity(toInClass08Activity);
+
                                 }
                             }
                         });

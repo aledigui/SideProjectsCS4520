@@ -9,22 +9,31 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.*;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firstapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +54,13 @@ public class ChatListFragment extends Fragment{
     private FirebaseUser mUser;
 
     private FirebaseFirestore db;
+
+    private TextView membersGroupChat;
+    private Button addUsernameButton;
+    private Button chatGroupChatButton;
+    private EditText groupChatText;
+
+    private String chatUsername = "";
 
 
     public ChatListFragment() {
@@ -71,7 +87,6 @@ public class ChatListFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         chats = new ArrayList<>();
-        // TODO: set the chats in the database
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -79,8 +94,14 @@ public class ChatListFragment extends Fragment{
         getActivity().setTitle("Available chats");
 
         recyclerViewChats = chatView.findViewById(R.id.chatRecyclerView);
+        membersGroupChat = chatView.findViewById(R.id.membersGroupChat);
+        addUsernameButton = chatView.findViewById(R.id.addUsernameButton);
+        groupChatText = chatView.findViewById(R.id.groupChatText);
+        chatGroupChatButton = chatView.findViewById(R.id.chatGroupChatButton);
+
         recyclerViewLayoutManager = new LinearLayoutManager(this.getContext());
         recyclerViewChats.setLayoutManager(recyclerViewLayoutManager);
+
         Context context = this.getContext();
 
         // get the registered users
@@ -106,6 +127,82 @@ public class ChatListFragment extends Fragment{
                 });
 
 
+        addUsernameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String tempUsername = groupChatText.getText().toString();
+
+                if (iChatMessage.onAddPressed(tempUsername, chats, membersGroupChat.getText().toString())) {
+                    groupChatText.setText("");
+                    chatUsername = membersGroupChat.getText().toString() + tempUsername + " ";
+                    membersGroupChat.setText(chatUsername);
+                } else {
+                    return;
+                }
+
+            }
+        });
+
+
+        String groupChat = "";
+        chatGroupChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!chatUsername.equals("")) {
+                    chatUsername = chatUsername.substring(1, chatUsername.length() - 1);
+                    String[] splitUsername = chatUsername.split("\\s+");
+                    List<String> arrayUsername = new ArrayList<String>(Arrays.asList(splitUsername));
+
+                    int counter = splitUsername.length;
+                    arrayUsername.add(iChatMessage.receiveUsername().trim());
+                    boolean exists = false;
+                    // TODO: come up with a more optimal solution
+                    for (int i = 0; i < chats.size(); i++) {
+                        counter = arrayUsername.size();
+
+                        String[] splitChatUsername = chats.get(i).getChatUsername().split("\\s+");
+                        if (counter < splitChatUsername.length) {
+                            break;
+                        }
+                        for (int w = 0; w < arrayUsername.size(); w++) {
+                            // check if there is a grouchat with that username already
+                            if (chats.get(i).getChatUsername().contains(arrayUsername.get(w).trim())) {
+                                counter -= 1;
+                                if (counter == 0) {
+                                    exists = true;
+                                }
+
+                            }
+                        }
+                    }
+                    if (!exists) {
+                        Map<String, String> newRegisteredUser = new HashMap<>();
+                        newRegisteredUser.put("username", chatUsername + " " +iChatMessage.receiveUsername());
+                        newRegisteredUser.put("email", groupChat + "@firstapp.com");
+                        db.collection("registeredUsers")
+                                .add(newRegisteredUser)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        // nothing
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getContext(), "Unable to create Groupchat", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                        iChatMessage.onGroupChatPressed(chatUsername.trim());
+                    } else {
+                        Toast.makeText(getContext(), "Groupchat already exists", Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    Toast.makeText(getContext(), "Add friends to your groupchat!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
 
         // Inflate the layout for this fragment
@@ -131,5 +228,10 @@ public class ChatListFragment extends Fragment{
 
     public interface IChatMessage {
         void onChatPressed(String otherUsername);
+        Boolean onAddPressed(String memberUsername, ArrayList<Chat> chats, String members);
+
+        String receiveUsername();
+
+        void onGroupChatPressed(String otherUsername);
     }
 }

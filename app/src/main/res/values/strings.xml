@@ -84,6 +84,11 @@
     <string name="chattingWith">Chatting with:</string>
     <string name="loggedInAs">"You are logged in as "</string>
     <string name="chat">Chat</string>
+    <string name="add">ADD</string>
+    <string name="groupchat">Create Groupchat!</string>
+    <string name="usernameGroupchat">Type groupchat members</string>
+    <string name="members">Members:</string>
+    <string name="info">Add usernames and create your groupchat!</string>
     <string-array name="countries">
         <item></item>
         <item>us</item>
