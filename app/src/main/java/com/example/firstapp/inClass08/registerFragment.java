@@ -317,7 +317,7 @@ public class registerFragment extends Fragment {
                                                                         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                                             @Override
                                                                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                                                Toast.makeText(getContext(), "Profile pic correctly saved!",
+                                                                                Toast.makeText(getContext(), "Welcome " + username,
                                                                                         Toast.LENGTH_LONG).show();
                                                                             }
                                                                         });
