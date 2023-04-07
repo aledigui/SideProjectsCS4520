@@ -81,6 +81,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         holder.getUsernameChat().setText(chats.get(position).getChatUsername());
         holder.getEmailChat().setText(chats.get(position).getChatEmail());
         String username = chats.get(position).getChatUsername();
+        String email = chats.get(position).getChatEmail();
 
         holder.getChatButton().setOnClickListener(new View.OnClickListener() {
             @Override

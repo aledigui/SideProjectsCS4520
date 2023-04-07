@@ -2,6 +2,9 @@ package com.example.firstapp.inClass08;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import android.Manifest;
+import android.content.pm.PackageManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +40,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RegisterSignUp extends AppCompatActivity {
+
+    // CHANGED THE ARCHITECTURE OF THE PROJECT TO 1 ACTIVITY AND THE REST FRAGMENTS
+    // THUS THIS CLASS IS JUST IN CASE I NEED TO GO BACK TO PREVIOUS ARCHITECTURE
+    // 2 ACTIVITIES AND THE REST FRAGMENTS
+
+
     // textviews
     private TextView emailLogin;
     private TextView passwordLogin;
@@ -62,6 +72,8 @@ public class RegisterSignUp extends AppCompatActivity {
 
     private Boolean signinup = false;
 
+    private ImageView signUpImage;
+
 
     // buttons
     private Button loginButton08;
@@ -73,10 +85,16 @@ public class RegisterSignUp extends AppCompatActivity {
 
     private FirebaseFirestore db;
 
+    private static final int PERMISSIONS_CODE = 0x100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_sign_up);
+
+        Boolean cameraAllowed = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        Boolean readAllowed = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        Boolean writeAllowed = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
         // FIREBASE
         mAuth = FirebaseAuth.getInstance();
@@ -110,6 +128,7 @@ public class RegisterSignUp extends AppCompatActivity {
         loginButton08 = findViewById(R.id.loginButton08);
         signUpButton08 = findViewById(R.id.signUpButton08);
         newCredentialsText = findViewById(R.id.newCredentialsText);
+        signUpImage = findViewById(R.id.signUpImage);
 
         // allow users to sign up
         signupclick.setClickable(true);
@@ -133,6 +152,7 @@ public class RegisterSignUp extends AppCompatActivity {
             confirmPasswordTextSignUp.setVisibility(View.INVISIBLE);
             signUpButton08.setVisibility(View.INVISIBLE);
             newCredentialsText.setVisibility(View.INVISIBLE);
+            signUpImage.setVisibility(View.INVISIBLE);
         }
 
 
@@ -154,7 +174,9 @@ public class RegisterSignUp extends AppCompatActivity {
                 passwordTextSignUp.setVisibility(View.VISIBLE);
                 confirmPasswordTextSignUp.setVisibility(View.VISIBLE);
                 signUpButton08.setVisibility(View.VISIBLE);
+                signUpImage.setVisibility(View.VISIBLE);
                 newCredentialsText.setVisibility(View.INVISIBLE);
+
 
                 signinup = true;
             }
@@ -196,6 +218,10 @@ public class RegisterSignUp extends AppCompatActivity {
                 if (confirmPasswordTextSignUp.getText() == null || confirmPasswordTextSignUp.getText().toString().equals("")
                         || !(passwordTextSignUp.getText().toString().equals(confirmPasswordTextSignUp.getText().toString()))) {
                     Toast.makeText(RegisterSignUp.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (signUpImage == null) {
+                    Toast.makeText(RegisterSignUp.this, "Please select a profile pic", Toast.LENGTH_LONG).show();
                     return;
                 }
                 // if the if statements pass this will be goo to run
@@ -255,6 +281,7 @@ public class RegisterSignUp extends AppCompatActivity {
                                     passwordTextSignUp.setVisibility(View.INVISIBLE);
                                     confirmPasswordTextSignUp.setVisibility(View.INVISIBLE);
                                     signUpButton08.setVisibility(View.INVISIBLE);
+                                    signUpImage.setVisibility(View.INVISIBLE);
 
                                     // set the credentials back to empty just in case the user wants to signup other users
                                     firstNameTextSignUp.setText("");
@@ -284,7 +311,6 @@ public class RegisterSignUp extends AppCompatActivity {
         loginButton08.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: do the authentication properly
                 if (emailTextLogIn.getText() == null || emailTextLogIn.getText().toString().equals("")
                         || !Patterns.EMAIL_ADDRESS.matcher(emailTextLogIn.getText().toString()).matches()) {
                     Toast.makeText(RegisterSignUp.this, "Invalid email", Toast.LENGTH_LONG).show();
@@ -321,6 +347,58 @@ public class RegisterSignUp extends AppCompatActivity {
                                 }
                             }
                         });
+
+            }
+        });
+
+        signUpImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: set the profile pic
+                if(cameraAllowed && readAllowed && writeAllowed){
+                    Toast.makeText(RegisterSignUp.this, "All permissions granted!", Toast.LENGTH_SHORT).show();
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.RegisterContainer, new CameraFragment(), "cameraFragment")
+                            .addToBackStack(null)
+                            .commit();
+
+                }else{
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.RegisterContainer, new CameraFragment(), "cameraFragment")
+                            .addToBackStack(null)
+                            .commit();
+
+                    signupText.setVisibility(View.INVISIBLE);
+                    emailLogin.setVisibility(View.INVISIBLE);
+                    passwordLogin.setVisibility(View.INVISIBLE);
+                    signupText.setVisibility(View.INVISIBLE);
+                    signupclick.setVisibility(View.INVISIBLE);
+                    firstNameSignUp.setVisibility(View.INVISIBLE);
+                    lastnameSignup.setVisibility(View.INVISIBLE);
+                    usernameSignup.setVisibility(View.INVISIBLE);
+                    emailSignUp.setVisibility(View.INVISIBLE);
+                    passwordSignup.setVisibility(View.INVISIBLE);
+                    reTypePasswordSignup.setVisibility(View.INVISIBLE);
+                    emailTextLogIn.setVisibility(View.INVISIBLE);
+                    passwordTextLogin.setVisibility(View.INVISIBLE);
+                    firstNameTextSignUp.setVisibility(View.INVISIBLE);
+                    lastNameTextSignUp.setVisibility(View.INVISIBLE);
+                    usernameTextSignUp.setVisibility(View.INVISIBLE);
+                    emailTextSignup.setVisibility(View.INVISIBLE);
+                    passwordTextSignUp.setVisibility(View.INVISIBLE);
+                    confirmPasswordTextSignUp.setVisibility(View.INVISIBLE);
+                    loginButton08.setVisibility(View.INVISIBLE);
+                    signUpButton08.setVisibility(View.INVISIBLE);
+                    newCredentialsText.setVisibility(View.INVISIBLE);
+                    signUpImage.setVisibility(View.INVISIBLE);
+
+                    Toast.makeText(RegisterSignUp.this, "No permissions", Toast.LENGTH_SHORT).show();
+                    requestPermissions(new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }, PERMISSIONS_CODE);
+                }
 
             }
         });

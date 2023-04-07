@@ -1,6 +1,7 @@
 package com.example.firstapp.inClass08;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,11 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +50,7 @@ import java.util.stream.Collectors;
  * Use the {@link MainChatFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+// TODO: allow users to send pictures!
 public class MainChatFragment extends Fragment {
 
     private static final String OTHER_USERNAME = "otherUsername";
@@ -71,12 +78,20 @@ public class MainChatFragment extends Fragment {
 
     private Boolean choosingChat = false;
 
-    private String other;
+    private String otherUsernamePlaceHolder;
+
+    private String groupChatName;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
     private FirebaseFirestore db;
+
+    private FirebaseStorage storage;
+
+    private StorageReference storageRef;
+
+    private ImageView imgButtonChat;
 
     private String chatsId;
 
@@ -84,23 +99,20 @@ public class MainChatFragment extends Fragment {
 
     private Boolean newConvo = false;
 
+    private ImageView editProfileButton;
+
+    private Uri newUri;
+
+    private final static String ARG_URI = "URI";
+
     public MainChatFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param otherUsername username of the account I am chatting with.
-     * @param myUsername    my username.
-     * @return A new instance of fragment MainChatFragment.
-     */
-    public static MainChatFragment newInstance(String otherUsername, String myUsername) {
+    public static MainChatFragment newInstance(Uri newUri) {
         MainChatFragment fragment = new MainChatFragment();
         Bundle args = new Bundle();
-        args.putString(OTHER_USERNAME, otherUsername);
-        args.putString(MY_USERNAME, myUsername);
+        args.putParcelable(ARG_URI, newUri);
         fragment.setArguments(args);
         return fragment;
     }
@@ -132,10 +144,14 @@ public class MainChatFragment extends Fragment {
         chattingWithText = chatView.findViewById(R.id.chattingWithText);
         loggedInAsText = chatView.findViewById(R.id.loggedInAsText);
         chatMessageRecyclerView = chatView.findViewById(R.id.chatMessageRecyclerView);
+        editProfileButton = chatView.findViewById(R.id.editProfileButton);
+        imgButtonChat = chatView.findViewById(R.id.imgButtonChat);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
 
         // Setting the usernames texts
@@ -144,27 +160,6 @@ public class MainChatFragment extends Fragment {
         chatsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // if chatsId is not null then it means that the user is chatting with someone
-                // Thus, there is something to save if the user tries to chat with another user
-                if (chatsId != null) {
-                    Map<String, ArrayList<ChatMessage>> chatsCollection = new HashMap<>();
-                    chatsCollection.put("chats", chatMessages);
-                    db.collection("chatsUsers").document(chatsId)
-                            .set(chatsCollection)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // nothing
-
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), "Unable to save chats with " + otherUsername.getText().toString(), Toast.LENGTH_LONG).show();
-                                }
-                            });
-                }
                 chatUpdate.onChatsPressed();
             }
         });
@@ -174,28 +169,20 @@ public class MainChatFragment extends Fragment {
             public void onClick(View view) {
                 // if chatsId is not null then it means that the user is chatting with someone
                 // Thus, there is something to save if the user tries to chat with another user
-                if (chatsId != null) {
-                    Map<String, ArrayList<ChatMessage>> chatsCollection = new HashMap<>();
-                    chatsCollection.put("chats", chatMessages);
-                    db.collection("chatsUsers").document(chatsId)
-                            .set(chatsCollection)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // nothing
-
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), "Unable to save chats with " + otherUsername.getText().toString(),
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            });
-
-                }
+                chatMessages.clear();
                 chatUpdate.onLogOutPressed();
+            }
+        });
+
+        // edit profile
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = "";
+                String email = "";
+                String lastName = "";
+                String firstName = "";
+                chatUpdate.onEditProfilePressed(username, email, lastName, firstName);
             }
         });
 
@@ -211,39 +198,45 @@ public class MainChatFragment extends Fragment {
                     } else {
 
 
-                        ChatMessage newChatMessage = new ChatMessage(myUsername.getText().toString(), typeMessageText.getText().toString());
+                        ChatMessage newChatMessage = new ChatMessage(myUsername.getText().toString(), typeMessageText.getText().toString(), null);
                         chatMessages.add(newChatMessage);
                         typeMessageText.setText("");
 
                         // updating the transaction
-                        DocumentReference chatCurrent = db.collection("chatsUsers").document(chatsId);
-                        db.runTransaction(new Transaction.Function<Void>() {
-                                    @Override
-                                    public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                                        DocumentSnapshot snapshot = transaction.get(chatCurrent);
-
-                                        // Note: this could be done without a transaction
-                                        //       by updating the population using FieldValue.increment()
-                                        transaction.update(chatCurrent, "chats", chatMessages);
-
-                                        // Success
-                                        return null;
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        Map<String, ArrayList<ChatMessage>> chatsCollection = new HashMap<>();
+                        chatsCollection.put("chats", chatMessages);
+                        Log.d("DEMO", chatMessages.toString());
+                        db.collection("chatsUsers").document(chatsId)
+                                .set(chatsCollection)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        // nothing
+                                        // NOTHING
+
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        // nothing
+                                        Toast.makeText(getContext(), "Unable to save chats with " + otherUsername.getText().toString(),
+                                                Toast.LENGTH_LONG).show();
                                     }
                                 });
 
                     }
                 }
+            }
+        });
+
+        imgButtonChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO
+                if (otherUsername.getText().toString().equals(" ")) {
+                    Toast.makeText(getContext(), "Select a user you would like to chat with!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                chatUpdate.onImgChatPressed();
             }
         });
 
@@ -262,12 +255,19 @@ public class MainChatFragment extends Fragment {
     }
 
     public void setOtherUsername(String newOtherUsername) {
-        other = newOtherUsername;
+        otherUsernamePlaceHolder = newOtherUsername;
         this.otherUsername.setText(newOtherUsername);
+
+
     }
 
     public String getMyUsername() {
         return this.myUsername.getText().toString();
+    }
+
+    public void setGroupChatName(String newGroupChatName) {
+        this.groupChatName = newGroupChatName;
+        this.otherUsername.setText(groupChatName);
     }
 
     public void setMyUsername(String newMyUsername) {
@@ -278,19 +278,22 @@ public class MainChatFragment extends Fragment {
         this.chatMessages = newChatMessages;
     }
 
+    public void setMessagePic(Uri uriPic) {
+        newUri = uriPic;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        if (other != null) {
-            otherUsername.setText(other);
+        if (otherUsernamePlaceHolder != null) {
+            otherUsername.setText(otherUsernamePlaceHolder);
         }
         boolean sorted = false;
         if (otherUsername.getText() != null && !otherUsername.getText().toString().equals(" ")) {
             // The id will be always in alphabetical order
             String username = this.getMyUsername();
-            String otherUsername = this.getOtherUsername();
 
-            String[] splitUsername = otherUsername.split("\\s+");
+            String[] splitUsername = otherUsernamePlaceHolder.split("\\s+");
             List<String> arrayUsername = new ArrayList<String>(Arrays.asList(splitUsername));
             if (!arrayUsername.contains(username)) {
                 arrayUsername.add(username.trim());
@@ -309,19 +312,67 @@ public class MainChatFragment extends Fragment {
             }
             if (!sorted) {
                 // if username is further up lexicographically
-                if (username.compareTo(otherUsername) < 0) {
-                    chatsId = username + otherUsername;
-                } else if (username.compareTo(otherUsername) > 0) {
-                    chatsId = otherUsername + username;
+                if (username.compareTo(otherUsernamePlaceHolder) < 0) {
+                    chatsId = username + otherUsernamePlaceHolder;
+                } else if (username.compareTo(otherUsernamePlaceHolder) > 0) {
+                    chatsId = otherUsernamePlaceHolder + username;
                 } else {
-                    if (username.equals(otherUsername)) {
-                        chatsId = username + otherUsername;
-                    } else if (username.length() > otherUsername.length()) {
-                        chatsId = otherUsername + username;
-                    } else if (username.length() < otherUsername.length()) {
-                        chatsId = username + otherUsername;
+                    if (username.equals(otherUsernamePlaceHolder)) {
+                        chatsId = username + otherUsernamePlaceHolder;
+                    } else if (username.length() > otherUsernamePlaceHolder.length()) {
+                        chatsId = otherUsernamePlaceHolder + username;
+                    } else if (username.length() < otherUsernamePlaceHolder.length()) {
+                        chatsId = username + otherUsernamePlaceHolder;
                     }
                 }
+            }
+
+            // TODO: IMAGES
+            if (newUri != null) {
+                String imageId = chatsId + "_" + chatMessages.size() + ".jpg";
+                String imgPath = "chatImages/" + imageId;
+                StorageReference usernameRef = storageRef.child(imageId);
+                StorageReference userImageRef = storageRef.child(imgPath);
+                Uri file = newUri;
+                UploadTask uploadTask;
+                uploadTask = userImageRef.putFile(file);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getContext(), "Unable to save picture. Try again",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // TODO: update the chats in the database
+                        // In this case we want to put an actual value to pictureMessage so that it changes
+                        // We will download the image associated with the Uri
+                        ChatMessage newChatMessage = new ChatMessage(myUsername.getText().toString(), newUri.toString(), newUri);
+                        newChatMessage.setPictureMessage(newUri);
+                        chatMessages.add(newChatMessage);
+                        typeMessageText.setText("");
+                        Map<String, ArrayList<ChatMessage>> chatsCollection = new HashMap<>();
+                        chatsCollection.put("chats", chatMessages);
+                        db.collection("chatsUsers").document(chatsId)
+                                .set(chatsCollection)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // NOTHING
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getContext(), "Unable to save chats with " + otherUsername.getText().toString(),
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                    }
+                });
             }
 
             DocumentReference docRef = db.collection("chatsUsers").document(chatsId);
@@ -337,8 +388,17 @@ public class MainChatFragment extends Fragment {
                             ArrayList<ChatMessage> tempChatMessages = new ArrayList<>();
                             ArrayList<HashMap> documentHash= (ArrayList<HashMap>) document.getData().get("chats");
                             for (int i = 0; i < documentHash.size(); i++) {
-                                ChatMessage tempChatMessage = new ChatMessage(documentHash.get(i).get("senderUsername").toString(),
-                                        documentHash.get(i).get("message").toString());
+                                String userNameMessage = documentHash.get(i).get("senderUsername").toString();
+                                String message = documentHash.get(i).get("message").toString();
+                                ChatMessage tempChatMessage;
+                                if (message.contains("content://")) {
+                                    tempChatMessage = new ChatMessage(userNameMessage,
+                                            message, Uri.parse(message));
+
+                                } else {
+                                    tempChatMessage = new ChatMessage(userNameMessage,
+                                            message, null);
+                                }
                                 tempChatMessages.add(tempChatMessage);
                             }
                             chatMessages = tempChatMessages;
@@ -367,6 +427,8 @@ public class MainChatFragment extends Fragment {
         }
     }
 
+
+
     public interface IChatUpdate {
         void onLogOutPressed();
 
@@ -376,7 +438,8 @@ public class MainChatFragment extends Fragment {
 
         Boolean colorCardViewSwitcher(String username);
 
+        void onEditProfilePressed(String username, String email, String lastName, String firstName);
 
-
+        void onImgChatPressed();
     }
 }

@@ -14,6 +14,7 @@ import com.example.firstapp.a_practiceActivity.PracticeActivity;
 import com.example.firstapp.inClass04.InClass04Activity;
 import com.example.firstapp.inClass05.InClass05Activity;
 import com.example.firstapp.inClass06.InClass06Activity;
+import com.example.firstapp.inClass08.InClass08Activity;
 import com.example.firstapp.inClass08.RegisterSignUp;
 
 public class MainActivity extends AppCompatActivity {
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         button_inclass08.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent toInClass08Activity = new Intent(MainActivity.this, RegisterSignUp.class);
+                Intent toInClass08Activity = new Intent(MainActivity.this, InClass08Activity.class);
                 startActivity(toInClass08Activity);
             }
         });

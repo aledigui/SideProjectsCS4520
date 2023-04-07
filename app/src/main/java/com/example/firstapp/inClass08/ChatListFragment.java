@@ -61,6 +61,7 @@ public class ChatListFragment extends Fragment{
     private EditText groupChatText;
 
     private String chatUsername = "";
+    private String groupChat = "";
 
 
     public ChatListFragment() {
@@ -144,7 +145,7 @@ public class ChatListFragment extends Fragment{
         });
 
 
-        String groupChat = "";
+
         chatGroupChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,9 +153,13 @@ public class ChatListFragment extends Fragment{
                     chatUsername = chatUsername.substring(1, chatUsername.length() - 1);
                     String[] splitUsername = chatUsername.split("\\s+");
                     List<String> arrayUsername = new ArrayList<String>(Arrays.asList(splitUsername));
-
+                    if (splitUsername.length < 2) {
+                        Toast.makeText(getContext(), "Grouchats must have more than 2 members", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     int counter = splitUsername.length;
                     arrayUsername.add(iChatMessage.receiveUsername().trim());
+                    int groupChatCounter = arrayUsername.size();
                     boolean exists = false;
                     // TODO: come up with a more optimal solution
                     for (int i = 0; i < chats.size(); i++) {
@@ -165,6 +170,10 @@ public class ChatListFragment extends Fragment{
                             break;
                         }
                         for (int w = 0; w < arrayUsername.size(); w++) {
+                            if (groupChatCounter > 0) {
+                                groupChat += arrayUsername.get(w).substring(0, 1);
+                            }
+                            groupChatCounter -= 1;
                             // check if there is a grouchat with that username already
                             if (chats.get(i).getChatUsername().contains(arrayUsername.get(w).trim())) {
                                 counter -= 1;
@@ -175,6 +184,7 @@ public class ChatListFragment extends Fragment{
                             }
                         }
                     }
+                    groupChat = "GC:" + String.valueOf(chats.size() + 1);
                     if (!exists) {
                         Map<String, String> newRegisteredUser = new HashMap<>();
                         newRegisteredUser.put("username", chatUsername + " " +iChatMessage.receiveUsername());
@@ -185,6 +195,7 @@ public class ChatListFragment extends Fragment{
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
                                         // nothing
+                                        iChatMessage.onGroupChatPressed(chatUsername);
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -193,7 +204,6 @@ public class ChatListFragment extends Fragment{
                                         Toast.makeText(getContext(), "Unable to create Groupchat", Toast.LENGTH_LONG).show();
                                     }
                                 });
-                        iChatMessage.onGroupChatPressed(chatUsername.trim());
                     } else {
                         Toast.makeText(getContext(), "Groupchat already exists", Toast.LENGTH_LONG).show();
                     }

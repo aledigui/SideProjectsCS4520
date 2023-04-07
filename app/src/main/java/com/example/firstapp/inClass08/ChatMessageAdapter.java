@@ -2,9 +2,12 @@ package com.example.firstapp.inClass08;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.firstapp.R;
@@ -25,12 +28,15 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         private final TextView usernameChatMessage, chatMessage;
         private CardView chatMessageCardView;
 
+        private ImageView pictureMessage;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameChatMessage = itemView.findViewById(R.id.usernameChatMessage);
             chatMessage = itemView.findViewById(R.id.chatMessage);
             chatMessageCardView = itemView.findViewById(R.id.chatMessageCardView);
+            pictureMessage = itemView.findViewById(R.id.pictureMessage);
 
 
         }
@@ -43,6 +49,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             return this.chatMessage;
         }
         public CardView getCardView() {return this.chatMessageCardView;}
+
+        public ImageView getPictureMessage() {return this.pictureMessage;}
 
     }
 
@@ -66,6 +74,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     public void onBindViewHolder(@NonNull ChatMessageAdapter.ViewHolder holder, int position) {
         holder.getUsernameChatMessage().setText(chatMessageList.get(position).getSenderUsername());
         holder.getChatMessage().setText(chatMessageList.get(position).getMessage());
+        if (chatMessageList.get(position).getPictureMessage() != null) {
+            holder.getChatMessage().setVisibility(View.INVISIBLE);
+            holder.getPictureMessage().setImageURI(null);
+            holder.getPictureMessage().setImageURI(chatMessageList.get(position).getPictureMessage());
+        }
         if (chatAdapterUpdate.colorCardViewSwitcher(chatMessageList.get(position).getSenderUsername())) {
             holder.getCardView().setCardBackgroundColor(Color.parseColor("#6A8150"));
             holder.getUsernameChatMessage().setTextColor(Color.parseColor("#31E439"));

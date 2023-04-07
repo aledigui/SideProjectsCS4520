@@ -33,11 +33,11 @@
 
         <Button
             android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="45dp"
             android:layout_marginBottom="50dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/send"
+            android:text="@string/sendIng"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -51,28 +51,32 @@
             android:hint="@string/typemessage"
             android:inputType="textEmailAddress"
             app:layout_constraintBottom_toBottomOf="@+id/sendButton"
-            app:layout_constraintEnd_toStartOf="@+id/sendButton"
+            app:layout_constraintEnd_toStartOf="@+id/imgButtonChat"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/chattingWithText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="50dp"
             android:text="@string/chattingWith"
-            app:layout_constraintBottom_toBottomOf="@+id/logOutMain"
+            app:layout_constraintBottom_toTopOf="@+id/chatMessageRecyclerView"
             app:layout_constraintStart_toEndOf="@+id/logOutMain"
-            app:layout_constraintTop_toTopOf="@+id/logOutMain" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/loggedInAsText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="32dp"
             android:text="@string/loggedInAs"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/typeMessageText" />
+            app:layout_constraintStart_toEndOf="@+id/editProfileButton"
+            app:layout_constraintTop_toBottomOf="@+id/typeMessageText"
+            app:layout_constraintVertical_bias="0.466" />
 
         <TextView
             android:id="@+id/myUsername"
@@ -102,11 +106,31 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintBottom_toTopOf="@+id/typeMessageText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/logOutMain" />
+
+        <ImageView
+            android:id="@+id/editProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@android:drawable/ic_menu_myplaces"
+            app:layout_constraintBottom_toBottomOf="@+id/loggedInAsText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/loggedInAsText" />
+
+        <ImageView
+            android:id="@+id/imgButtonChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@android:drawable/ic_menu_camera"
+            app:layout_constraintBottom_toBottomOf="@+id/sendButton"
+            app:layout_constraintEnd_toStartOf="@+id/sendButton"
+            app:layout_constraintTop_toTopOf="@+id/sendButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
