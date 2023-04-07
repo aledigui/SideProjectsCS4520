@@ -137,6 +137,13 @@ public class CameraFragment extends Fragment {
             }
         });
 
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                iCamera.onGalleryPressed(screenSaverPlaceholder);
+            }
+        });
+
 
 
 
@@ -182,7 +189,8 @@ public class CameraFragment extends Fragment {
     }
 
     public interface ICameraPicture {
-        void onGalleryPressed();
+        void onGalleryPressed(int screen);
         void onCapturePressed(int i, Uri imgUri);
+
     }
 }

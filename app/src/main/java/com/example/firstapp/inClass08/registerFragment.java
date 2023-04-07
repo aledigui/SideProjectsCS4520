@@ -349,6 +349,7 @@ public class registerFragment extends Fragment {
                                                                         emailTextSignup.setText("");
                                                                         passwordTextSignUp.setText("");
                                                                         confirmPasswordTextSignUp.setText("");
+                                                                        signUpImage.setImageResource(R.drawable.select_avatar);
 
 
                                                                         // new credentials text

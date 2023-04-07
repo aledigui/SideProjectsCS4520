@@ -1,8 +1,13 @@
 package com.example.firstapp.inClass08;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.net.Uri;
@@ -22,6 +27,10 @@ public class InClass08Activity extends AppCompatActivity implements registerFrag
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
+
+    private int screenCamera;
+
+    private Uri uriGallery;
 
 
     private static final int PERMISSIONS_CODE = 0x100;
@@ -57,11 +66,6 @@ public class InClass08Activity extends AppCompatActivity implements registerFrag
                 .replace(R.id.MainChatFragmentContainer, new ChatListFragment(), "chatList")
                 .addToBackStack(null)
                 .commit();
-    }
-
-    @Override
-    public void onSendPressed() {
-        // TODO: add the stuff
     }
 
     @Override
@@ -194,11 +198,38 @@ public class InClass08Activity extends AppCompatActivity implements registerFrag
                 .addToBackStack(null)
                 .commit();
     }
+    ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode()==RESULT_OK){
+                        Intent data = result.getData();
+                        Uri newUri = data.getData();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.MainChatFragmentContainer, cameraPreviewFragment.newInstance(screenCamera, newUri), "cameraPreviewFragment")
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                }
+            }
+    );
 
     @Override
-    public void onGalleryPressed() {
-        // TODO: pop the gallery
+    public void onGalleryPressed(int screen) {
+        screenCamera = screen;
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        galleryLauncher.launch(intent);
+
+
+
+
     }
+
+
 
     @Override
     public void onCapturePressed(int i, Uri imgUri) {

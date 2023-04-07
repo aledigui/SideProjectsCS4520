@@ -76,8 +76,13 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         holder.getChatMessage().setText(chatMessageList.get(position).getMessage());
         if (chatMessageList.get(position).getPictureMessage() != null) {
             holder.getChatMessage().setVisibility(View.INVISIBLE);
+            holder.getPictureMessage().getLayoutParams().height = 500;
+            holder.getPictureMessage().getLayoutParams().width = 500;
             holder.getPictureMessage().setImageURI(null);
             holder.getPictureMessage().setImageURI(chatMessageList.get(position).getPictureMessage());
+
+            holder.getPictureMessage().requestLayout();
+
         }
         if (chatAdapterUpdate.colorCardViewSwitcher(chatMessageList.get(position).getSenderUsername())) {
             holder.getCardView().setCardBackgroundColor(Color.parseColor("#6A8150"));

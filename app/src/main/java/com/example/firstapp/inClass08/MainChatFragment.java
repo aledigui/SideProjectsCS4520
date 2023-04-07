@@ -205,7 +205,6 @@ public class MainChatFragment extends Fragment {
                         // updating the transaction
                         Map<String, ArrayList<ChatMessage>> chatsCollection = new HashMap<>();
                         chatsCollection.put("chats", chatMessages);
-                        Log.d("DEMO", chatMessages.toString());
                         db.collection("chatsUsers").document(chatsId)
                                 .set(chatsCollection)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -285,6 +284,7 @@ public class MainChatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        chatMessages.clear();
         if (otherUsernamePlaceHolder != null) {
             otherUsername.setText(otherUsernamePlaceHolder);
         }
@@ -346,11 +346,13 @@ public class MainChatFragment extends Fragment {
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // TODO: update the chats in the database
                         // In this case we want to put an actual value to pictureMessage so that it changes
                         // We will download the image associated with the Uri
                         ChatMessage newChatMessage = new ChatMessage(myUsername.getText().toString(), newUri.toString(), newUri);
                         newChatMessage.setPictureMessage(newUri);
+                        // setting it back to null so that it doesn't keep the reference
+                        // and stores it in another chat
+                        newUri = null;
                         chatMessages.add(newChatMessage);
                         typeMessageText.setText("");
                         Map<String, ArrayList<ChatMessage>> chatsCollection = new HashMap<>();
@@ -375,6 +377,7 @@ public class MainChatFragment extends Fragment {
                 });
             }
 
+
             DocumentReference docRef = db.collection("chatsUsers").document(chatsId);
             Context fragContext = getContext();
             recyclerViewLayoutManager = new LinearLayoutManager(fragContext);
@@ -390,8 +393,9 @@ public class MainChatFragment extends Fragment {
                             for (int i = 0; i < documentHash.size(); i++) {
                                 String userNameMessage = documentHash.get(i).get("senderUsername").toString();
                                 String message = documentHash.get(i).get("message").toString();
+                                Object pictureMessage = documentHash.get(i).get("pictureMessage");
                                 ChatMessage tempChatMessage;
-                                if (message.contains("content://")) {
+                                if (pictureMessage != null) {
                                     tempChatMessage = new ChatMessage(userNameMessage,
                                             message, Uri.parse(message));
 
@@ -405,6 +409,7 @@ public class MainChatFragment extends Fragment {
 
                             chatMessageAdapter = new ChatMessageAdapter(chatMessages, fragContext);
                             chatMessageRecyclerView.setAdapter(chatMessageAdapter);
+
                         } else {
                             chatMessages = new ArrayList<ChatMessage>();
                             chatMessageAdapter = new ChatMessageAdapter(chatMessages, fragContext);
@@ -433,8 +438,6 @@ public class MainChatFragment extends Fragment {
         void onLogOutPressed();
 
         void onChatsPressed();
-
-        void onSendPressed();
 
         Boolean colorCardViewSwitcher(String username);
 

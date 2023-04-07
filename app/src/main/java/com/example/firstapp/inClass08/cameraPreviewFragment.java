@@ -105,6 +105,8 @@ public class cameraPreviewFragment extends Fragment {
             }
         });
 
+
+
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,5 +182,6 @@ public class cameraPreviewFragment extends Fragment {
         void onUploadChatMessage(Uri imgUri);
 
         void onUploadEditProfile(Uri imgUri);
+
     }
 }
